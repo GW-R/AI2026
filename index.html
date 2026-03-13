@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy Portfolio | 유가원</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;300;400;700&display=swap');
+        
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #c41e3a; /* Vivid Ruby Wine */
+            --accent-light: #ff2b4e;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --sub-text: #94a3b8;
+            --section-bg: #050505;
+            --nav-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        .light-mode {
+            --bg-color: #fcfcfc;
+            --text-color: #000000;
+            --accent-color: #b91c1c; /* Strong Red */
+            --accent-light: #dc2626;
+            --card-bg: rgba(0, 0, 0, 0.02);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --sub-text: #4b5563;
+            --section-bg: #f3f4f6;
+            --nav-bg: rgba(252, 252, 252, 0.8);
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-color);
+            box-shadow: 0 20px 40px rgba(196, 30, 58, 0.15);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .modal-blur {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .light-mode .modal-blur {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Profile Image Optimization */
+        .profile-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: white; 
+            padding: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: contain;
+            transition: all 0.4s ease;
+        }
+
+        .profile-wrapper:hover .profile-image {
+            transform: scale(1.1);
+        }
+
+        .profile-wrapper:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.3);
+        }
+
+        .profile-fallback {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--accent-color);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(196, 30, 58, 0.05);
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 10px;
+        }
+        
+        .wine-glow {
+            box-shadow: 0 0 25px rgba(196, 30, 58, 0.4);
+        }
+
+        .light-mode .wine-glow {
+            box-shadow: 0 10px 20px rgba(185, 28, 28, 0.3);
+        }
+    </style>
+</head>
+<body class="selection:bg-[var(--accent-color)] selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center bg-[var(--nav-bg)] backdrop-blur-md border-b border-white/5">
+        <div class="text-xl font-bold tracking-tighter flex items-center">
+            <span class="w-3 h-3 bg-[var(--accent-color)] rounded-full mr-2 shadow-[0_0_10px_var(--accent-color)]"></span>
+            AI LITERACY
+        </div>
+        <div class="flex items-center space-x-8">
+            <div class="hidden md:flex space-x-8 text-sm font-light uppercase tracking-widest">
+                <a href="#hero" class="hover:text-[var(--accent-color)] transition-colors">Home</a>
+                <a href="#intro" class="hover:text-[var(--accent-color)] transition-colors">Goal</a>
+                <a href="#gallery" class="hover:text-[var(--accent-color)] transition-colors">Portfolio</a>
+                <a href="#about" class="hover:text-[var(--accent-color)] transition-colors">About</a>
+            </div>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex flex-col justify-center items-center px-6 text-center">
+        <div class="absolute inset-0 overflow-hidden -z-10">
+            <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[var(--accent-color)] opacity-[0.12] rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[var(--accent-color)] opacity-[0.05] rounded-full blur-[150px]"></div>
+        </div>
+        
+        <h1 class="text-6xl md:text-9xl font-bold tracking-tighter mb-8 leading-none">
+            AI Literacy:<br>
+            <span class="font-extralight italic text-accent">Data & Story</span>
+        </h1>
+        <p class="text-lg md:text-xl font-light opacity-60 max-w-3xl leading-relaxed">
+            현실의 문제를 데이터로 읽어내고, 생성형 AI의 지능을 빌려<br class="hidden md:block">
+            세상을 변화시키는 <span class="text-[var(--accent-color)] font-bold">의미 있는 가치</span>를 제안합니다.
+        </p>
+        <div class="mt-12">
+            <a href="#gallery" class="px-12 py-5 bg-[var(--accent-color)] text-white rounded-full font-bold hover:bg-[var(--accent-light)] transition-all wine-glow uppercase tracking-[0.2em] text-sm">
+                Explore Work
+            </a>
+        </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="intro" class="py-32 px-6 bg-[var(--section-bg)] transition-colors duration-500">
+        <div class="max-w-6xl mx-auto reveal">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-6 tracking-tight">수업 목표 및 비전</h2>
+                    <p class="opacity-70 font-light leading-relaxed mb-8 text-lg">
+                        단순히 툴을 다루는 법을 넘어, AI와 협업하여 사회적 난제를 해결하는 <span class="text-[var(--accent-color)] font-medium">데이터 스토리텔러</span>가 되는 것을 목표로 합니다.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border-l-4 border-[var(--accent-color)] pl-5 py-2">
+                            <span class="block text-3xl font-bold">10+</span>
+                            <span class="text-xs opacity-50 uppercase tracking-widest">Assignments</span>
+                        </div>
+                        <div class="border-l-4 border-[var(--accent-color)] pl-5 py-2">
+                            <span class="block text-3xl font-bold">5+</span>
+                            <span class="text-xs opacity-50 uppercase tracking-widest">Core Tools</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="glass-card p-8 rounded-2xl flex items-center space-x-6">
+                        <div class="w-14 h-14 flex-shrink-0 bg-[var(--accent-color)]/10 rounded-2xl flex items-center justify-center text-2xl text-[var(--accent-color)] shadow-inner"><i class="fas fa-brain"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">AI 기본 이해</h4>
+                            <p class="text-sm opacity-60 mt-1">작동 원리와 윤리적 한계를 명확히 인식합니다.</p>
+                        </div>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl flex items-center space-x-6">
+                        <div class="w-14 h-14 flex-shrink-0 bg-[var(--accent-color)]/10 rounded-2xl flex items-center justify-center text-2xl text-[var(--accent-color)] shadow-inner"><i class="fas fa-chart-line"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">데이터 분석 역량</h4>
+                            <p class="text-sm opacity-60 mt-1">도구를 통해 데이터 속 인사이트를 발굴합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Gallery -->
+    <section id="gallery" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-16 gap-4 reveal">
+                <div>
+                    <h2 class="text-5xl font-bold tracking-tighter">Portfolio Gallery</h2>
+                    <p class="opacity-60 mt-4 font-light italic border-l-2 border-[var(--accent-color)] pl-4 text-lg">데이터와 지능이 만나는 가장 뜨거운 지점</p>
+                </div>
+                <div class="text-xs font-mono opacity-40 tracking-widest uppercase">Scroll to explore projects</div>
+            </div>
+
+            <div class="bento-grid" id="projectGrid">
+                <!-- Cards injected by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 px-6 bg-[var(--section-bg)] transition-colors duration-500">
+        <div class="max-w-4xl mx-auto reveal text-center">
+            <div class="mb-12 relative inline-block">
+                <div class="profile-wrapper mb-8">
+                    <img src="image_e4b682.png" 
+                         alt="유가원 캐릭터 프로필" 
+                         class="profile-image shadow-md"
+                         onerror="this.style.display='none'; document.getElementById('fallbackIcon').style.display='flex';">
+                    <div id="fallbackIcon" class="profile-fallback">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-[var(--accent-color)] text-white text-[10px] px-4 py-1.5 font-bold rounded-full shadow-xl z-10">PNU SW</div>
+            </div>
+            <h2 class="text-4xl font-bold mb-4">유 가 원 <span class="font-light text-[var(--accent-color)] opacity-80 ml-2 italic">Yu Gawon</span></h2>
+            <p class="text-lg opacity-80 font-light mb-2">부산대학교 사회과학대학 사회복지학과 22학번</p>
+            <p class="opacity-60 font-light mb-12 max-w-xl mx-auto leading-relaxed text-lg">
+                데이터의 차가운 수치 속에 숨겨진 사람들의 따뜻한 이야기를 발견하고, <br>
+                인간 중심의 기술 활용을 고민하는 사회과학도입니다.
+            </p>
+            <div class="flex justify-center space-x-8">
+                <a href="#" class="text-2xl opacity-40 hover:text-[var(--accent-color)] hover:opacity-100 transition-all hover:-translate-y-1"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-2xl opacity-40 hover:text-[var(--accent-color)] hover:opacity-100 transition-all hover:-translate-y-1"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="text-2xl opacity-40 hover:text-[var(--accent-color)] hover:opacity-100 transition-all hover:-translate-y-1"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 px-6 border-t border-[var(--card-border)] text-center">
+        <div class="w-8 h-1 bg-[var(--accent-color)] mx-auto mb-8 rounded-full"></div>
+        <p class="text-[11px] opacity-40 uppercase tracking-[0.4em]">© 2024 AI Literacy Portfolio — Created by <span class="text-[var(--accent-color)] font-extrabold">Yu Gawon</span></p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 modal-blur hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg-color)] border border-[var(--accent-color)]/20 w-full max-w-3xl rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(196,30,58,0.1)] relative">
+            <button onclick="closeModal()" class="absolute top-8 right-8 text-3xl opacity-30 hover:text-[var(--accent-color)] hover:opacity-100 transition-all">&times;</button>
+            <div id="modalContent" class="p-10 md:p-16">
+                <!-- Content injected by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+
+        const assignments = [
+            { id: 1, title: "AI의 이해", tools: ["NotebookLM", "Gemini"], desc: "노트북LM을 활용하여 AI의 정의, 역사 및 생성형 AI의 핵심 개념을 체계적으로 정리합니다.", detail: "구글의 NotebookLM을 활용하여 방대한 AI 관련 문헌 자료를 업로드하고, AI의 탄생부터 현재의 생성형 AI 열풍까지의 흐름을 분석했습니다. 특히 소스 출처를 기반으로 한 할루시네이션 최소화 정리 기법을 학습했습니다.", link: "./02/index.html" },
+            { id: 2, title: "데이터 수집의 기술", tools: ["Python", "BeautifulSoup"], desc: "비정형 데이터의 세계에서 필요한 정보를 선별하고 정제하는 법을 배웁니다.", detail: "사회복지 관련 키워드로 뉴스 데이터를 수집하고, 분석 가능한 CSV 형태로 전처리하는 데이터 파이프라인을 구축했습니다." },
+            { id: 3, title: "할루시네이션의 이해", tools: ["Gen AI"], desc: "AI의 한계와 윤리적 오류를 비판적으로 바라보고 대응 방안을 제시합니다.", detail: "역사적 사실 검증을 통해 AI가 생성한 거짓 정보를 포착하고, 이를 수정하기 위한 RAG(검색 증강 생성) 기법의 필요성을 논의했습니다." },
+            { id: 4, title: "데이터로 읽는 사회 현상", tools: ["Matplotlib", "Seaborn"], desc: "수치를 시각적 패턴으로 변환하여 사회 문제의 이면을 통찰합니다.", detail: "국내 1인 가구 빈곤율 데이터를 시각화하여 특정 연령층에서의 심각한 불균형 문제를 발견하고 가설을 설정했습니다." },
+            { id: 5, title: "상상을 현실로: 멀티모달", tools: ["Midjourney", "DALL-E 3"], desc: "추상적 개념을 시각적 콘텐츠로 변환하는 생성 능력을 키웁니다.", detail: "사각지대 없는 복지 서비스를 형상화한 브랜드 아이덴티티와 포스터를 텍스트 가이드만으로 정교하게 제작했습니다." },
+            { id: 6, title: "인사이트 스토리텔링", tools: ["Canva", "ChatGPT"], desc: "분석된 데이터를 토대로 설득력 있는 서사를 구축합니다.", detail: "데이터가 보여주는 경향성을 7단계 서사 구조로 변환하여 정책 제안가들에게 전달하는 카드뉴스 형식의 보고서를 제작했습니다." },
+            { id: 7, title: "AI 기반 동영상 기획", tools: ["Runway", "Luma"], desc: "텍스트와 이미지를 움직임이 있는 스토리로 확장합니다.", detail: "사회복지 캠페인을 위한 30초 분량의 홍보 영상을 AI 툴을 활용해 스토리보드부터 최종 렌더링까지 완성했습니다." },
+            { id: 8, title: "맞춤형 AI 솔루션 설계", tools: ["AI Tools"], desc: "특정 집단의 불편함을 해소하는 AI 서비스 모델을 기획합니다.", detail: "노인 디지털 소외 문제를 해결하기 위한 보이스봇 인터페이스와 맞춤형 UI 시나리오를 설계했습니다." },
+            { id: 9, title: "데이터 대시보드 구축", tools: ["Tableau", "Excel"], desc: "실시간으로 변화하는 데이터를 한눈에 파악하는 시스템을 만듭니다.", detail: "지역구별 복지 시설 현황을 지도로 시각화하여 자원 투입의 효율성을 비교 분석할 수 있는 동적 대시보드를 제작했습니다." },
+            { id: 10, title: "캡스톤: 나의 AI 비전", tools: ["Full Stack"], desc: "한 학기 동안 축적된 역량을 하나의 통합 포트폴리오로 승화시킵니다.", detail: "사회복지학과 22학번 유가원이 그리는 '인간을 위한 AI 리터러시'의 정의와 향후 로드맵을 선언문 형태로 제시했습니다." }
+        ];
+
+        const grid = document.getElementById('projectGrid');
+
+        assignments.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "glass-card p-10 rounded-[2rem] cursor-pointer reveal group relative";
+            card.style.transitionDelay = `${(index % 3) * 0.1}s`;
+            card.onclick = (e) => {
+                // 우측 상단 화살표 아이콘 클릭 시 전파를 방지하고 바로 해당 링크로 이동
+                const arrowBtn = e.target.closest('.arrow-link');
+                if (arrowBtn && item.link) {
+                    e.stopPropagation();
+                    window.location.href = item.link;
+                    return;
+                }
+                openModal(item);
+            };
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-8">
+                    <span class="text-xs font-mono text-[var(--accent-color)] font-bold opacity-60 uppercase tracking-widest">Assignment ${String(item.id).padStart(2, '0')}</span>
+                    <div class="arrow-link w-10 h-10 rounded-full border border-[var(--accent-color)]/20 flex items-center justify-center group-hover:bg-[var(--accent-color)] group-hover:border-[var(--accent-color)] transition-all transform group-hover:rotate-45">
+                        <i class="fas fa-arrow-right text-[10px] group-hover:text-white transition-all"></i>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 group-hover:text-[var(--accent-color)] transition-colors tracking-tight">${item.title}</h3>
+                <p class="text-sm opacity-50 font-light mb-8 line-clamp-2 leading-relaxed">${item.desc}</p>
+                <div class="flex flex-wrap gap-2">
+                    ${item.tools.map(tool => `<span class="px-3 py-1 bg-[var(--accent-color)]/5 rounded-full text-[10px] font-bold text-[var(--accent-color)] border border-[var(--accent-color)]/10">${tool}</span>`).join('')}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        function openModal(item) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-12 h-[3px] bg-[var(--accent-color)] rounded-full"></div>
+                    <span class="text-xs font-mono text-[var(--accent-color)] font-black uppercase tracking-[0.3em]">Project ${item.id}</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 tracking-tighter leading-tight">${item.title}</h2>
+                <div class="flex flex-wrap gap-3 mb-10">
+                    ${item.tools.map(tool => `<span class="px-5 py-2 bg-[var(--accent-color)] text-white rounded-full text-xs font-bold shadow-lg shadow-[var(--accent-color)]/20">${tool}</span>`).join('')}
+                </div>
+                <div class="space-y-8 opacity-80 font-light leading-relaxed">
+                    <p class="text-xl md:text-2xl leading-snug tracking-tight text-[var(--text-color)] font-normal">${item.desc}</p>
+                    <div class="bg-[var(--accent-color)]/5 p-8 rounded-[2rem] border border-[var(--accent-color)]/20 shadow-inner">
+                        <h4 class="text-lg font-bold mb-4 flex items-center text-[var(--accent-color)]">
+                            <i class="fas fa-terminal mr-3 text-sm"></i> Project Insights
+                        </h4>
+                        <p class="text-base md:text-lg opacity-90 leading-relaxed font-light">${item.detail}</p>
+                    </div>
+                </div>
+                <div class="mt-12 pt-10 border-t border-[var(--card-border)] flex flex-col md:flex-row gap-6 justify-between items-center">
+                    <div class="flex flex-col space-y-1">
+                        <span class="text-sm opacity-50 font-mono tracking-tighter">PNU Social Welfare '22 | AI Literacy Case Study</span>
+                        ${item.link ? `<a href="${item.link}" class="text-xs font-bold text-[var(--accent-color)] hover:underline">결과물 자세히 보기 &rarr;</a>` : ''}
+                    </div>
+                    <div class="flex gap-4 w-full md:w-auto">
+                        ${item.link ? `<a href="${item.link}" class="flex-1 md:flex-none text-center text-sm font-bold uppercase tracking-widest bg-[var(--accent-color)] text-white px-10 py-4 rounded-full hover:bg-[var(--accent-light)] transition-all wine-glow">결과물보기</a>` : ''}
+                        <button onclick="closeModal()" class="flex-1 md:flex-none text-sm font-bold uppercase tracking-widest border border-[var(--card-border)] px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all">닫기</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

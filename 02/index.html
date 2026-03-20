@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI의 이해: 인류의 새로운 지평</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap');
+        
+        :root {
+            --ruby-red: #D10047;
+            --ruby-glow: rgba(209, 0, 71, 0.4);
+            --bg-black: #050505;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-black);
+            color: #ffffff;
+            scroll-behavior: smooth;
+            line-height: 1.7;
+        }
+
+        .ruby-text { color: var(--ruby-red); }
+        .ruby-bg { background-color: var(--ruby-red); }
+        .ruby-border { border-color: var(--ruby-red); }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(209, 0, 71, 0.6);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-5px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 40%, var(--ruby-red) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 99px;
+            background: rgba(209, 0, 71, 0.12);
+            color: var(--ruby-red);
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(209, 0, 71, 0.2);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .history-card {
+            border-left: 2px solid rgba(209, 0, 71, 0.3);
+            padding-left: 2rem;
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .history-card::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--ruby-red);
+            box-shadow: 0 0 10px var(--ruby-red);
+        }
+
+        /* Unified Button Point Style */
+        .btn-ruby-point {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            min-width: 200px;
+            border-radius: 0.75rem; /* rounded-xl */
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(209, 0, 71, 0.1);
+            border: 2px solid rgba(209, 0, 71, 0.5);
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ruby-point:hover {
+            background: var(--ruby-red);
+            border-color: var(--ruby-red);
+            box-shadow: 0 0 20px var(--ruby-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-ruby-point i {
+            color: var(--ruby-red);
+            margin-right: 0.75rem;
+            font-size: 1.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .btn-ruby-point:hover i {
+            color: #ffffff;
+        }
+
+        /* Modal Styles */
+        #infographic-modal, #video-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            position: relative;
+            max-width: 90%; max-height: 85vh;
+            background: #111; padding: 20px;
+            border: 1px solid rgba(209, 0, 71, 0.3);
+            border-radius: 16px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 20px;
+            color: white; font-size: 28px; cursor: pointer;
+            z-index: 10;
+        }
+        video {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center bg-black/80 backdrop-blur-lg border-b border-white/5" id="main-nav">
+        <div class="text-2xl font-black tracking-tighter cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            AI<span class="ruby-text">.INSIGHT</span>
+        </div>
+        <div class="hidden md:flex space-x-12 text-[10px] font-bold uppercase tracking-[0.25em]">
+            <a href="#history" class="hover:ruby-text transition-colors">History</a>
+            <a href="#tech" class="hover:ruby-text transition-colors">Technology</a>
+            <a href="#ethics" class="hover:ruby-text transition-colors">Ethics</a>
+            <a href="#future" class="hover:ruby-text transition-colors">Future</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 relative">
+        <div class="absolute w-[800px] h-[800px] ruby-bg opacity-[0.03] rounded-full blur-[150px] -z-10"></div>
+        <div class="section-tag reveal">Integrated Strategic Report</div>
+        <h1 class="text-6xl md:text-[8rem] font-black mb-10 tracking-tighter leading-none reveal">
+            지능의 <span class="gradient-text">재정의</span>
+        </h1>
+        <p class="text-gray-400 text-lg md:text-xl max-w-4xl mb-14 font-light leading-relaxed reveal">
+            계산기에서 범용 지능(AGI)까지, 그리고 에이전틱 AI가 가져올 규제 환경의 대전환.<br>
+            업로드된 3종의 전략 보고서를 통합한 심층 분석 대시보드입니다.
+        </p>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="py-40 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-32 reveal">
+            <div class="section-tag">Historical Milestones</div>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                <h2 class="text-5xl font-black tracking-tighter">AI 발전의 <span class="ruby-text">역사적 궤적</span></h2>
+                <button id="open-infographic" class="px-5 py-2 rounded-full border border-ruby-red/30 bg-ruby-red/10 text-xs font-bold text-ruby-red uppercase">
+                    <i class="fa-solid fa-expand mr-2"></i> 연대기 인포그래픽
+                </button>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-20">
+            <div class="space-y-20">
+                <div class="reveal">
+                    <h3 class="text-2xl font-black mb-8 border-b border-ruby-red/20 pb-4 italic">01. 초기 계산 모델과 이론적 토대 <span class="text-sm font-normal text-gray-500 ml-2">~1950s</span></h3>
+                    <div class="space-y-6">
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1642 파스칼린 (Pascaline)</p>
+                            <p class="text-gray-400 text-xs mt-1">블레즈 파스칼이 발명한 최초의 기계적 계산기. 수치를 물리적으로 처리하며 논리 연산의 기틀을 마련했습니다.</p>
+                        </div>
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1950 튜링 테스트 (Turing Test)</p>
+                            <p class="text-gray-400 text-xs mt-1">앨런 튜링이 "기계가 생각할 수 있는가?"라는 질문을 제기. 지능의 기준을 행동적 반응으로 정의하며 현대 AI의 철학적 뿌리가 되었습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h3 class="text-2xl font-black mb-8 border-b border-ruby-red/20 pb-4 italic">02. 학문적 정립과 연결주의의 서막 <span class="text-sm font-normal text-gray-500 ml-2">1956~1960s</span></h3>
+                    <div class="space-y-6">
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1956 다트머스 컨퍼런스</p>
+                            <p class="text-gray-400 text-xs mt-1">존 매카시, 마빈 민스키 등이 주도. '인공지능(AI)'이라는 용어를 공식 정의하고 독립적인 학문 분야로 선포했습니다.</p>
+                        </div>
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1958 퍼셉트론 (Perceptron)</p>
+                            <p class="text-gray-400 text-xs mt-1">프랭크 로젠블랫이 제안한 초기 신경망 모델. 뇌의 신경 구조를 모방하여 인지 가능성을 탐구한 연결주의 연구의 시발점입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-20">
+                <div class="reveal">
+                    <h3 class="text-2xl font-black mb-8 border-b border-ruby-red/20 pb-4 italic">03. AI 겨울과 알고리즘적 돌파구 <span class="text-sm font-normal text-gray-500 ml-2">1970s~1990s</span></h3>
+                    <div class="space-y-6">
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1969 첫 번째 AI 겨울</p>
+                            <p class="text-gray-400 text-xs mt-1">민스키가 퍼셉트론의 XOR 연산 불가능성을 수학적으로 증명하며 신경망 연구가 급격히 위축되고 연구 자금이 동결된 암흑기입니다.</p>
+                        </div>
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1986 역전파 알고리즘 (Backpropagation)</p>
+                            <p class="text-gray-400 text-xs mt-1">제프리 힌튼이 다층 신경망 학습의 가능성을 입증. AI가 복잡한 비선형 문제를 해결할 수 있는 기술적 반전의 기틀을 마련했습니다.</p>
+                        </div>
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">1997 딥블루 (Deep Blue)의 승리</p>
+                            <p class="text-gray-400 text-xs mt-1">IBM의 AI가 세계 체스 챔피언 가리 카스파로프를 격파. 특정 영역에서의 기계적 우월성을 대중에게 각인시켰습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <h3 class="text-2xl font-black mb-8 border-b border-ruby-red/20 pb-4 italic">04. 빅데이터와 딥러닝 혁명 <span class="text-sm font-normal text-gray-500 ml-2">2010s~Present</span></h3>
+                    <div class="space-y-6">
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">2012 알렉스넷 (AlexNet)의 등판</p>
+                            <p class="text-gray-400 text-xs mt-1">이미지넷 대회에서 압도적 우승. GPU 연산과 거대 데이터가 결합하여 현대 딥러닝의 폭발적인 성장을 견인했습니다.</p>
+                        </div>
+                        <div class="history-card">
+                            <p class="text-ruby-text font-bold text-sm">2016 알파고 (AlphaGo) 쇼크</p>
+                            <p class="text-gray-400 text-xs mt-1">강화학습을 통해 바둑에서 인간을 제패. '직관'의 영역까지 기계가 학습할 수 있음을 증명하며 전 세계적 관심을 촉발했습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Deep Dive -->
+    <section id="tech" class="py-40 bg-white/[0.02]">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="section-tag reveal">Technical Architecture</div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-20 gap-6 reveal">
+                <h2 class="text-5xl font-black">핵심 기술 계층 분석</h2>
+                
+                <!-- Fully Unified Buttons with Ruby Points -->
+                <div class="flex flex-wrap gap-4">
+                    <!-- Watch Video Button (Unified) -->
+                    <button id="open-video" class="btn-ruby-point">
+                        <i class="fa-solid fa-circle-play"></i>
+                        Watch Video
+                    </button>
+                    <!-- Download Slide Button (Unified) -->
+                    <a href="AI 03 ppt.pdf" download="AI 03 ppt.pdf" class="btn-ruby-point">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        Download Slide
+                    </a>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 reveal">
+                <div class="glass-card p-10 rounded-2xl">
+                    <div class="text-ruby-text text-4xl mb-6"><i class="fa-solid fa-brain"></i></div>
+                    <h4 class="text-xl font-bold mb-4">머신러닝 (ML)</h4>
+                    <p class="text-gray-500 text-sm font-light">명시적 프로그래밍 없이 데이터를 통해 성능을 개선하는 방법론.</p>
+                </div>
+                <div class="glass-card p-10 rounded-2xl border-ruby-red/40">
+                    <div class="text-ruby-text text-4xl mb-6"><i class="fa-solid fa-network-wired"></i></div>
+                    <h4 class="text-xl font-bold mb-4">딥러닝 (DL)</h4>
+                    <p class="text-gray-500 text-sm font-light">다층 신경망을 활용한 <b>자동 특징 추출</b>. 고차원 패턴을 스스로 파악.</p>
+                </div>
+                <div class="glass-card p-10 rounded-2xl">
+                    <div class="text-ruby-text text-4xl mb-6"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h4 class="text-xl font-bold mb-4">생성형 AI (GenAI)</h4>
+                    <p class="text-gray-500 text-sm font-light">트랜스포머 아키텍처 기반. 텍스트, 이미지, 코드를 창조하는 지능.</p>
+                </div>
+            </div>
+
+            <div class="mt-20 p-8 glass-card rounded-2xl reveal">
+                <h4 class="font-bold mb-6 text-ruby-text">주요 플랫폼 및 기술적 기반</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="text-gray-400 border-b border-white/10">
+                            <tr>
+                                <th class="pb-4">서비스 명</th>
+                                <th class="pb-4">주요 기능</th>
+                                <th class="pb-4">기술적 기반</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-300">
+                            <tr class="border-b border-white/5"><td class="py-4">ChatGPT</td><td>문서 요약, 코드 작성</td><td>GPT-4 (Transformer)</td></tr>
+                            <tr class="border-b border-white/5"><td class="py-4">Midjourney</td><td>고품질 아트 생성</td><td>Diffusion Model</td></tr>
+                            <tr><td class="py-4">GitHub Copilot</td><td>코드 자동 완성</td><td>LLM (Codex)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ethics & Regulation -->
+    <section id="ethics" class="py-40 px-6 max-w-6xl mx-auto">
+        <div class="section-tag reveal">Compliance & Ethics</div>
+        <h2 class="text-5xl font-black mb-10 reveal">글로벌 AI 규제: <span class="ruby-text">EU AI Act</span></h2>
+        <div class="bg-ruby-red/5 p-10 rounded-3xl border border-ruby-red/20 reveal">
+            <h4 class="text-xl font-black mb-8 italic">Strategic 5-Checklist</h4>
+            <ul class="space-y-4 text-sm text-gray-400 font-light">
+                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-ruby-text mt-1"></i> <b>위험 등급 매핑:</b> 고위험 여부 판별</li>
+                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-ruby-text mt-1"></i> <b>데이터 감사:</b> 편향성 및 프라이버시 검증</li>
+                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-ruby-text mt-1"></i> <b>표시 의무:</b> 생성 결과물 고지 UI 반영</li>
+                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-ruby-text mt-1"></i> <b>인간 개입(HITL):</b> 검증 프로세스 구축</li>
+                <li class="flex items-start gap-3"><i class="fa-solid fa-check text-ruby-text mt-1"></i> <b>IP 권리:</b> 저작권 관계 법적 확인</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Future: Agentic AI -->
+    <section id="future" class="py-40 bg-white/[0.02]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="section-tag reveal">Next Horizon</div>
+            <h2 class="text-5xl md:text-7xl font-black mb-12 reveal">에이전틱 AI와 <span class="ruby-text">AGI</span></h2>
+            <div class="mt-20 reveal">
+                <div class="inline-block px-10 py-5 rounded-full border border-ruby-red text-ruby-text font-bold animate-pulse">
+                    Strategic Resilience: 준비된 혁신만이 살아남습니다.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infographic Modal -->
+    <div id="infographic-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('infographic-modal')"><i class="fa-solid fa-xmark"></i></span>
+            <img src="Ai history.jpg" alt="AI 연대기 인포그래픽">
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="video-modal">
+        <div class="modal-content w-full md:w-[800px]">
+            <span class="close-modal" onclick="closeModal('video-modal')"><i class="fa-solid fa-xmark"></i></span>
+            <video id="ai-video" controls>
+                <source src="AI_01.mp4" type="video/mp4">
+                브라우저가 동영상 태그를 지원하지 않습니다.
+            </video>
+            <p class="mt-4 text-gray-400 text-xs tracking-widest uppercase">AI Strategic Briefing : Video Overview</p>
+        </div>
+    </div>
+
+    <footer class="py-20 px-8 border-t border-white/5 text-center">
+        <div class="text-3xl font-black mb-4 tracking-tighter italic">AI<span class="ruby-text">.INSIGHT</span></div>
+        <p class="text-gray-600 text-[9px] uppercase tracking-[0.6em]">Strategy x Technology x Ethics</p>
+    </footer>
+
+    <script>
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            if (id === 'video-modal') {
+                document.getElementById('ai-video').pause();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+            revealElements.forEach(el => observer.observe(el));
+
+            // Infographic Modal
+            const infoModal = document.getElementById('infographic-modal');
+            document.getElementById('open-infographic').onclick = () => {
+                infoModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            };
+
+            // Video Modal
+            const videoModal = document.getElementById('video-modal');
+            const videoElement = document.getElementById('ai-video');
+            document.getElementById('open-video').onclick = () => {
+                videoModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                videoElement.play();
+            };
+
+            // Close when clicking outside
+            [infoModal, videoModal].forEach(modal => {
+                modal.onclick = (e) => {
+                    if(e.target === modal) closeModal(modal.id);
+                };
+            });
+        });
+    </script>
+</body>
+</html>

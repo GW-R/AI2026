@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산광역시 인구 및 고령화 실태 (2020-2024)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        :root {
+            --bg-base: #000000;
+            --bg-card: #0a0a0a;
+            --border-color: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --accent-ruby: #e11d48;
+        }
+
+        body { 
+            background-color: var(--bg-base); 
+            color: var(--text-primary); 
+            font-family: 'Pretendard', sans-serif; 
+            letter-spacing: -0.025em;
+            word-break: keep-all;
+        }
+
+        nav {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-ruby);
+            transform: translateY(-2px);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+        }
+
+        .ruby-line {
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent-ruby);
+        }
+
+        .btn-home {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            border-color: var(--text-primary);
+            background-color: var(--text-primary);
+            color: var(--bg-base);
+        }
+
+        /* 상세 데이터 테이블 스타일 */
+        table { width: 100%; border-collapse: collapse; }
+        th { color: var(--text-secondary); font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding: 12px 8px; text-align: left; }
+        td { padding: 16px 8px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        tr:hover td { color: var(--accent-ruby); }
+
+        .highlight-box {
+            border-left: 2px solid var(--accent-ruby);
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body class="antialiased pb-32">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 px-8 py-5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-xs font-black tracking-[0.2em] uppercase text-white">Busan Aging Report</span>
+                <span class="text-[10px] text-neutral-600 font-mono hidden sm:inline">STRATEGY & DATA ANALYSIS</span>
+            </div>
+            <a href="../index.html" class="btn-home px-5 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                HOME
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-48 pb-20 px-8 max-w-7xl mx-auto">
+        <div class="ruby-line mb-8"></div>
+        <p class="text-[11px] font-bold tracking-[0.3em] uppercase text-neutral-500 mb-4">Demographic Crisis Assessment</p>
+        <h1 class="text-5xl md:text-8xl font-black mb-10 tracking-tighter leading-[0.95]">
+            THE <span class="text-[#e11d48]">CRITICAL</span><br/>POINT OF BUSAN.
+        </h1>
+        <p class="text-neutral-500 text-lg md:text-2xl max-w-3xl font-light leading-relaxed">
+            단순한 고령화를 넘어, 도시의 지지 기반이 흔들리고 있습니다. <br/>
+            <span class="text-white font-normal">인구총조사 데이터(2020-2024)</span>를 기반으로 부산의 구조적 위기를 심층 분석합니다.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-8 space-y-16">
+        
+        <!-- Part 1: Macro Indicators -->
+        <section>
+            <h2 class="text-xs font-bold tracking-[0.3em] uppercase text-neutral-600 mb-10">01 / 주요 거시 지표</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-1">
+                <div class="stat-card p-8">
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Total Pop</p>
+                    <p class="text-4xl font-light">3.25M</p>
+                    <p class="text-[10px] mt-2 text-neutral-600">전년 대비 -0.68%</p>
+                </div>
+                <div class="stat-card p-8">
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Senior Count</p>
+                    <p class="text-4xl font-light text-[#e11d48]">1.02M</p>
+                    <p class="text-[10px] mt-2 text-neutral-600">사상 첫 100만 명 돌파</p>
+                </div>
+                <div class="stat-card p-8">
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Aging Ratio</p>
+                    <p class="text-4xl font-light">31.33%</p>
+                    <p class="text-[10px] mt-2 text-neutral-600">특광역시 중 최고치</p>
+                </div>
+                <div class="stat-card p-8">
+                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Dep. Ratio</p>
+                    <p class="text-4xl font-light">1 : 3.2</p>
+                    <p class="text-[10px] mt-2 text-neutral-600">실질 부양 부담 가속화</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 2: Structural Decoupling -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-4 space-y-8">
+                <div>
+                    <h2 class="text-xs font-bold tracking-[0.3em] uppercase text-neutral-600 mb-6">02 / 구조적 불균형</h2>
+                    <h3 class="text-3xl font-bold mb-4 tracking-tight leading-tight">인구 디커플링 현상</h3>
+                    <p class="text-neutral-500 text-sm leading-relaxed">
+                        부산은 '총인구 감소'와 '고령인구 증가'가 정반대의 궤적을 그리는 전형적인 디커플링 상태입니다. 지난 5년간 총인구는 9.1만 명 감소했으나, 고령인구는 오히려 12.8만 명 증가하며 인구의 질적 구성이 급격히 노쇠화되고 있습니다.
+                    </p>
+                </div>
+                <div class="highlight-box">
+                    <h4 class="text-white font-bold mb-2">데이터 핵심 요약</h4>
+                    <ul class="text-sm text-neutral-500 space-y-3 font-light">
+                        <li>• 2024년 고령인구 비중: <span class="text-white">31.3%</span> (2020년 대비 4.6%p 증가)</li>
+                        <li>• 총인구 연평균 감소율: <span class="text-white">약 0.7%</span></li>
+                        <li>• 고령자 연평균 증가율: <span class="text-white">약 3.4%</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lg:col-span-8 stat-card p-10">
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 3: Regional Analysis -->
+        <section>
+            <h2 class="text-xs font-bold tracking-[0.3em] uppercase text-neutral-600 mb-10">03 / 지역별 상세 분포</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-1">
+                <div class="lg:col-span-7 stat-card p-10">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>지역구</th>
+                                <th>2024 고령인구</th>
+                                <th>증감폭 (vs 2020)</th>
+                                <th>비중</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">해운대구</td>
+                                <td>129,545명</td>
+                                <td class="text-[#e11d48]">▲ 17,231</td>
+                                <td>33.1%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">부산진구</td>
+                                <td>108,753명</td>
+                                <td class="text-[#e11d48]">▲ 13,473</td>
+                                <td>31.5%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">사하구</td>
+                                <td>99,531명</td>
+                                <td class="text-[#e11d48]">▲ 14,882</td>
+                                <td>33.7%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">금정구</td>
+                                <td>75,812명</td>
+                                <td class="text-[#e11d48]">▲ 8,245</td>
+                                <td>35.4%</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">동래구</td>
+                                <td>75,754명</td>
+                                <td class="text-[#e11d48]">▲ 11,402</td>
+                                <td>28.3%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="lg:col-span-5 stat-card p-10 flex flex-col">
+                    <h3 class="text-lg font-bold mb-6">고령화 밀집도 분석</h3>
+                    <p class="text-neutral-500 text-sm mb-10">절대적 고령자 수는 인구가 많은 해운대구가 가장 높으나, 중구·동구 등 원도심의 노령화 지수는 더욱 심각한 수준입니다.</p>
+                    <div class="flex-grow">
+                        <canvas id="districtBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part 4: Strategic Roadmap -->
+        <section class="space-y-1">
+            <h2 class="text-xs font-bold tracking-[0.3em] uppercase text-neutral-600 mb-10">04 / 데이터 기반 제언</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+                <div class="stat-card p-12">
+                    <span class="text-[#e11d48] font-mono text-sm mb-4 block">#01 Infrastructure</span>
+                    <h3 class="text-2xl font-bold mb-6">수요 기반의 인프라 재편</h3>
+                    <p class="text-neutral-500 leading-relaxed text-sm">
+                        현재의 복지 인프라는 산발적으로 흩어져 있습니다. 고령 인구가 집중된 해운대, 부산진 지역을 중심으로 한 '메디컬 시니어 클러스터' 조성이 필수적입니다.
+                    </p>
+                </div>
+                <div class="stat-card p-12">
+                    <span class="text-[#e11d48] font-mono text-sm mb-4 block">#02 Economic Power</span>
+                    <h3 class="text-2xl font-bold mb-6">액티브 시니어 경제 활성화</h3>
+                    <p class="text-neutral-500 leading-relaxed text-sm">
+                        102만 명의 고령층은 단순한 부양 대상이 아닌 새로운 소비 주체입니다. 시니어 특화 일자리와 AI 기반 헬스케어 산업을 결합해 부산의 새로운 성장 동력으로 삼아야 합니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Banner -->
+        <section class="p-16 bg-white text-black rounded-sm">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-12">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl md:text-6xl font-black tracking-tighter mb-8 uppercase leading-none">TIME TO<br/>REBUILD.</h2>
+                    <p class="text-xl font-medium leading-relaxed">
+                        부산은 이제 '젊은 도시'를 꿈꾸는 대신, '가장 잘 늙어가는 도시'로의 정체성 확립이 필요합니다. 데이터는 그 변화의 시작점을 가리키고 있습니다.
+                    </p>
+                </div>
+                <div class="flex-shrink-0 text-right hidden md:block">
+                    <p class="text-4xl font-black text-[#e11d48] mb-2">2026</p>
+                    <p class="text-xs font-bold tracking-widest text-neutral-400">VISIONARY REPORT</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-40 border-t border-neutral-900 py-12 px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-6">
+                <span class="text-[10px] text-neutral-600 font-bold tracking-[0.2em] uppercase">© 2026 BUSAN METROPOLITAN</span>
+                <span class="text-[10px] text-neutral-800 hidden md:inline">|</span>
+                <span class="text-[10px] text-neutral-600 font-bold tracking-[0.2em] uppercase">Policy Research Institute</span>
+            </div>
+            <div class="flex gap-8">
+                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-white transition-colors">Data Privacy</span>
+                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-white transition-colors">API Access</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        Chart.defaults.color = '#555';
+        Chart.defaults.font.family = "'Pretendard', sans-serif";
+        Chart.defaults.font.size = 11;
+
+        const years = ['2020', '2021', '2022', '2023', '2024'];
+        const totalPop = [3349016, 3324335, 3295760, 3279604, 3257256];
+        const seniorPop = [892277, 934024, 965387, 997993, 1020554];
+
+        // Main Trend Chart (Mixed Line/Area)
+        new Chart(document.getElementById('mainChart'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [
+                    {
+                        label: '고령 인구 수',
+                        data: seniorPop,
+                        borderColor: '#e11d48',
+                        backgroundColor: 'rgba(225, 29, 72, 0.1)',
+                        borderWidth: 4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#e11d48',
+                        tension: 0.2
+                    },
+                    {
+                        label: '총 인구 수',
+                        data: totalPop,
+                        borderColor: '#333',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        tension: 0.2
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { 
+                        display: true, 
+                        position: 'top', 
+                        align: 'end',
+                        labels: { boxWidth: 10, usePointStyle: true, padding: 20 }
+                    },
+                    tooltip: {
+                        backgroundColor: '#111',
+                        titleFont: { weight: 'bold' },
+                        padding: 12,
+                        borderColor: '#222',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { padding: 10 } },
+                    y: { 
+                        position: 'left', 
+                        grid: { color: '#111' },
+                        ticks: {
+                            callback: value => (value / 10000).toFixed(0) + '만'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Regional Density Bar Chart
+        new Chart(document.getElementById('districtBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['해운대', '부산진', '사하', '금정', '동래'],
+                datasets: [{
+                    label: '고령인구 비중 (%)',
+                    data: [33.1, 31.5, 33.7, 35.4, 28.3],
+                    backgroundColor: value => value.index === 3 ? '#e11d48' : '#222',
+                    borderRadius: 0,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { 
+                        grid: { color: '#111' },
+                        min: 20,
+                        max: 40,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

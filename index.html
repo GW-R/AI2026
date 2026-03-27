@@ -3,473 +3,428 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>부산광역시 인구 및 고령화 실태 심층 분석 (2020-2024)</title>
+    <title>AI Literacy Portfolio | 유가원</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;300;400;700&display=swap');
         
         :root {
-            --bg-base: #000000;
-            --bg-card: #0a0a0a;
-            --border-color: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #888888;
-            --accent-ruby: #e11d48;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #c41e3a; /* Vivid Ruby Wine */
+            --accent-light: #ff2b4e;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --sub-text: #94a3b8;
+            --section-bg: #050505;
+            --nav-bg: rgba(0, 0, 0, 0.5);
         }
 
-        body { 
-            background-color: var(--bg-base); 
-            color: var(--text-primary); 
-            font-family: 'Pretendard', sans-serif; 
-            letter-spacing: -0.025em;
-            word-break: keep-all;
+        .light-mode {
+            --bg-color: #fcfcfc;
+            --text-color: #000000;
+            --accent-color: #b91c1c; /* Strong Red */
+            --accent-light: #dc2626;
+            --card-bg: rgba(0, 0, 0, 0.02);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --sub-text: #4b5563;
+            --section-bg: #f3f4f6;
+            --nav-bg: rgba(252, 252, 252, 0.8);
         }
 
-        nav {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        .stat-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .stat-card:hover {
-            border-color: var(--accent-ruby);
+        .glass-card:hover {
+            transform: scale(1.03);
+            border-color: var(--accent-color);
+            box-shadow: 0 20px 40px rgba(196, 30, 58, 0.15);
         }
 
-        .chart-container {
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .modal-blur {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        .light-mode .modal-blur {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Profile Image Optimization */
+        .profile-wrapper {
             position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: white; 
+            padding: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        .profile-image {
             width: 100%;
-            height: 420px;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: contain;
+            transition: all 0.4s ease;
         }
 
-        .ruby-line {
+        .profile-wrapper:hover .profile-image {
+            transform: scale(1.1);
+        }
+
+        .profile-wrapper:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.3);
+        }
+
+        .profile-fallback {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--accent-color);
+            background: var(--card-bg);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
             width: 40px;
-            height: 2px;
-            background-color: var(--accent-ruby);
-        }
-
-        .btn-home {
-            background: transparent;
-            border: 1px solid var(--border-color);
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
             transition: all 0.3s ease;
         }
 
-        .btn-home:hover {
-            border-color: var(--text-primary);
-            background-color: var(--text-primary);
-            color: var(--bg-base);
+        .theme-toggle:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(196, 30, 58, 0.05);
         }
 
-        /* 상세 데이터 테이블 스타일 */
-        table { width: 100%; border-collapse: collapse; }
-        th { color: var(--text-secondary); font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding: 12px 8px; text-align: left; }
-        td { padding: 16px 8px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        tr:hover td { color: var(--accent-ruby); }
-
-        .highlight-box {
-            border-left: 2px solid var(--accent-ruby);
-            padding: 24px;
-            background: linear-gradient(90deg, rgba(225, 29, 72, 0.05) 0%, transparent 100%);
+        .text-accent {
+            color: var(--accent-color);
         }
 
-        .section-title {
-            font-size: 0.75rem;
-            font-weight: 800;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: #444;
-            margin-bottom: 2.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        ::-webkit-scrollbar {
+            width: 6px;
         }
-        .section-title::after {
-            content: "";
-            flex-grow: 1;
-            height: 1px;
-            background: var(--border-color);
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 10px;
+        }
+        
+        .wine-glow {
+            box-shadow: 0 0 25px rgba(196, 30, 58, 0.4);
+        }
+
+        .light-mode .wine-glow {
+            box-shadow: 0 10px 20px rgba(185, 28, 28, 0.3);
         }
     </style>
 </head>
-<body class="antialiased pb-32">
+<body class="selection:bg-[var(--accent-color)] selection:text-white">
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 px-8 py-5">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-xs font-black tracking-[0.2em] uppercase text-white">Busan Aging Report</span>
-                <span class="text-[10px] text-neutral-600 font-mono hidden sm:inline">STRATEGY & DATA ANALYSIS UNIT</span>
+    <nav class="fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center bg-[var(--nav-bg)] backdrop-blur-md border-b border-white/5">
+        <div class="text-xl font-bold tracking-tighter flex items-center">
+            <span class="w-3 h-3 bg-[var(--accent-color)] rounded-full mr-2 shadow-[0_0_10px_var(--accent-color)]"></span>
+            AI LITERACY
+        </div>
+        <div class="flex items-center space-x-8">
+            <div class="hidden md:flex space-x-8 text-sm font-light uppercase tracking-widest">
+                <a href="#hero" class="hover:text-[var(--accent-color)] transition-colors">Home</a>
+                <a href="#intro" class="hover:text-[var(--accent-color)] transition-colors">Goal</a>
+                <a href="#gallery" class="hover:text-[var(--accent-color)] transition-colors">Portfolio</a>
+                <a href="#about" class="hover:text-[var(--accent-color)] transition-colors">About</a>
             </div>
-            <a href="../index.html" class="btn-home px-5 py-2 rounded-full text-xs font-bold flex items-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                HOME
-            </a>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="pt-48 pb-24 px-8 max-w-7xl mx-auto">
-        <div class="ruby-line mb-8"></div>
-        <p class="text-[11px] font-bold tracking-[0.3em] uppercase text-neutral-500 mb-4">Statistical Crisis Assessment 2020-2024</p>
-        <h1 class="text-6xl md:text-9xl font-black mb-12 tracking-tighter leading-[0.9]">
-            FACING THE <span class="text-[#e11d48]">INEVITABLE</span><br/>FUTURE OF BUSAN.
-        </h1>
-        <p class="text-neutral-500 text-xl md:text-3xl max-w-4xl font-light leading-relaxed">
-            부산광역시는 대한민국 특광역시 중 가장 먼저 초고령 사회의 문턱을 넘었습니다. <br/>
-            <span class="text-white font-normal underline underline-offset-8 decoration-neutral-800">5년간의 인구 흐름</span>은 단순한 노령화를 넘어 도시 존립의 패러다임 변화를 요구하고 있습니다.
-        </p>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-8 space-y-24">
+    <section id="hero" class="relative min-h-screen flex flex-col justify-center items-center px-6 text-center">
+        <div class="absolute inset-0 overflow-hidden -z-10">
+            <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[var(--accent-color)] opacity-[0.12] rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[var(--accent-color)] opacity-[0.05] rounded-full blur-[150px]"></div>
+        </div>
         
-        <!-- Part 1: Strategic Summary -->
-        <section>
-            <div class="section-title">01 / Executive Summary</div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-1">
-                <div class="stat-card p-10">
-                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Gross Population</p>
-                    <p class="text-4xl font-light mb-2">3,257,256</p>
-                    <p class="text-xs text-neutral-600">5년간 2.7% 순감소</p>
-                    <div class="mt-6 pt-6 border-t border-neutral-900 text-[13px] text-neutral-400 font-light leading-relaxed">
-                        부산의 총인구는 2020년 334만 명에서 2024년 325만 명으로 하락하며 도시의 생산성이 지속적으로 약화되고 있습니다.
-                    </div>
-                </div>
-                <div class="stat-card p-10">
-                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Senior Expansion</p>
-                    <p class="text-4xl font-light text-[#e11d48] mb-2">1,020,554</p>
-                    <p class="text-xs text-neutral-600">60세 이상 인구 지표</p>
-                    <div class="mt-6 pt-6 border-t border-neutral-900 text-[13px] text-neutral-400 font-light leading-relaxed">
-                        고령층 인구는 역사상 처음으로 100만 명을 돌파했습니다. 이는 부산 시민 3명 중 1명이 고령자임을 의미합니다.
-                    </div>
-                </div>
-                <div class="stat-card p-10">
-                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Aging Index</p>
-                    <p class="text-4xl font-light mb-2">31.3%</p>
-                    <p class="text-xs text-neutral-600">고령인구 상대 비중</p>
-                    <div class="mt-6 pt-6 border-t border-neutral-900 text-[13px] text-neutral-400 font-light leading-relaxed">
-                        인구 비중의 증가는 복지 예산과 사회적 인프라 수요의 급격한 변화를 초래하는 결정적인 지표입니다.
-                    </div>
-                </div>
-                <div class="stat-card p-10">
-                    <p class="text-[10px] font-bold text-neutral-500 uppercase mb-4">Dependency</p>
-                    <p class="text-4xl font-light mb-2">1 : 3.2</p>
-                    <p class="text-xs text-neutral-600">생산가능인구 대비 부양비</p>
-                    <div class="mt-6 pt-6 border-t border-neutral-900 text-[13px] text-neutral-400 font-light leading-relaxed">
-                        경제 활동 인구 3명이 고령자 1명을 부양해야 하는 구조로, 청년층의 경제적 부담이 한계치에 다다르고 있습니다.
-                    </div>
-                </div>
-            </div>
-        </section>
+        <h1 class="text-6xl md:text-9xl font-bold tracking-tighter mb-8 leading-none">
+            AI Literacy:<br>
+            <span class="font-extralight italic text-accent">Data & Story</span>
+        </h1>
+        <p class="text-lg md:text-xl font-light opacity-60 max-w-3xl leading-relaxed">
+            현실의 문제를 데이터로 읽어내고, 생성형 AI의 지능을 빌려<br class="hidden md:block">
+            세상을 변화시키는 <span class="text-[var(--accent-color)] font-bold">의미 있는 가치</span>를 제안합니다.
+        </p>
+        <div class="mt-12">
+            <a href="#gallery" class="px-12 py-5 bg-[var(--accent-color)] text-white rounded-full font-bold hover:bg-[var(--accent-light)] transition-all wine-glow uppercase tracking-[0.2em] text-sm">
+                Explore Work
+            </a>
+        </div>
+    </section>
 
-        <!-- Part 2: Deep Dive Analysis -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <div class="lg:col-span-5 space-y-10">
+    <!-- Introduction Section -->
+    <section id="intro" class="py-32 px-6 bg-[var(--section-bg)] transition-colors duration-500">
+        <div class="max-w-6xl mx-auto reveal">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
-                    <div class="section-title">02 / Structural Insight</div>
-                    <h3 class="text-4xl font-bold mb-8 tracking-tight leading-tight">데드 크로스를 넘어선 <br/><span class="text-[#e11d48]">인구 디커플링</span></h3>
-                    <p class="text-neutral-400 text-lg leading-relaxed font-light mb-8">
-                        전통적인 인구 모델에서는 전체 인구가 감소하면 고령 인구의 절대 수도 서서히 줄어드는 것이 일반적입니다. 그러나 부산은 <span class="text-white">총인구 감소 속도보다 고령인구 증가 속도가 압도적으로 빠른</span> 비정상적 디커플링(Decoupling) 현상을 보입니다.
+                    <h2 class="text-4xl font-bold mb-6 tracking-tight">수업 목표 및 비전</h2>
+                    <p class="opacity-70 font-light leading-relaxed mb-8 text-lg">
+                        단순히 툴을 다루는 법을 넘어, AI와 협업하여 사회적 난제를 해결하는 <span class="text-[var(--accent-color)] font-medium">데이터 스토리텔러</span>가 되는 것을 목표로 합니다.
                     </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="border-l-4 border-[var(--accent-color)] pl-5 py-2">
+                            <span class="block text-3xl font-bold">10+</span>
+                            <span class="text-xs opacity-50 uppercase tracking-widest">Assignments</span>
+                        </div>
+                        <div class="border-l-4 border-[var(--accent-color)] pl-5 py-2">
+                            <span class="block text-3xl font-bold">5+</span>
+                            <span class="text-xs opacity-50 uppercase tracking-widest">Core Tools</span>
+                        </div>
+                    </div>
                 </div>
-                
                 <div class="grid grid-cols-1 gap-4">
-                    <div class="highlight-box">
-                        <h4 class="text-white font-bold mb-3 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-[#e11d48] rounded-full"></span>
-                            가속화되는 질적 노쇠화
-                        </h4>
-                        <p class="text-sm text-neutral-500 leading-relaxed font-light">
-                            단순한 수명 연장을 넘어, 생산 가능 인구(15~64세)의 역외 유출이 심화되면서 도시 내부의 인구 구성이 질적으로 급변하고 있습니다. 이는 도시의 혁신 역량 저하로 이어지는 직접적 원인이 됩니다.
-                        </p>
+                    <div class="glass-card p-8 rounded-2xl flex items-center space-x-6">
+                        <div class="w-14 h-14 flex-shrink-0 bg-[var(--accent-color)]/10 rounded-2xl flex items-center justify-center text-2xl text-[var(--accent-color)] shadow-inner"><i class="fas fa-brain"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">AI 기본 이해</h4>
+                            <p class="text-sm opacity-60 mt-1">작동 원리와 윤리적 한계를 명확히 인식합니다.</p>
+                        </div>
                     </div>
-                    <div class="highlight-box">
-                        <h4 class="text-white font-bold mb-3 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-[#e11d48] rounded-full"></span>
-                            비가역적 인구 구조
-                        </h4>
-                        <p class="text-sm text-neutral-500 leading-relaxed font-light">
-                            현재의 고령화 속도는 정책적 개입으로도 되돌리기 어려운 비가역적 단계에 진입했습니다. 이제는 '젊은 도시'로의 회귀가 아닌 '초고령 사회'에 최적화된 시스템 구축이 유일한 해법입니다.
-                        </p>
+                    <div class="glass-card p-8 rounded-2xl flex items-center space-x-6">
+                        <div class="w-14 h-14 flex-shrink-0 bg-[var(--accent-color)]/10 rounded-2xl flex items-center justify-center text-2xl text-[var(--accent-color)] shadow-inner"><i class="fas fa-chart-line"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">데이터 분석 역량</h4>
+                            <p class="text-sm opacity-60 mt-1">도구를 통해 데이터 속 인사이트를 발굴합니다.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="lg:col-span-7 stat-card p-12">
-                <div class="mb-8 flex justify-between items-end">
-                    <div>
-                        <h4 class="text-sm font-bold uppercase tracking-widest text-neutral-500">Longitudinal Analysis</h4>
-                        <p class="text-2xl font-bold">인구 디커플링 5개년 추이</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-neutral-600 font-mono">UNIT: PERSONS (NUMBER)</p>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="mainChart"></canvas>
-                </div>
-                <div class="mt-8 pt-8 border-t border-neutral-900 grid grid-cols-2 gap-8">
-                    <div>
-                        <p class="text-[10px] text-neutral-500 uppercase mb-1">Max Population Loss</p>
-                        <p class="text-lg font-mono text-white">-91,760 (-2.7%)</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-neutral-500 uppercase mb-1">Senior Net Growth</p>
-                        <p class="text-lg font-mono text-[#e11d48]">+128,277 (+14.4%)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Part 3: Regional Disparity -->
-        <section>
-            <div class="section-title">03 / Regional Granularity</div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-1">
-                <div class="lg:col-span-8 stat-card p-12">
-                    <div class="mb-10">
-                        <h3 class="text-2xl font-bold mb-2">주요 자치구별 고령화 데이터</h3>
-                        <p class="text-sm text-neutral-500">절대 인구수 기반의 상위 8개 지역구 심층 분석</p>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>행정구역</th>
-                                <th>2024 고령인구</th>
-                                <th>5개년 증감</th>
-                                <th>고령화 비중</th>
-                                <th>사회적 지수</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="font-bold">해운대구</td>
-                                <td class="font-mono">129,545</td>
-                                <td class="text-[#e11d48] font-mono">+17,231</td>
-                                <td class="text-white">33.1%</td>
-                                <td class="text-xs text-neutral-600 font-light">인프라 수요 집중</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">부산진구</td>
-                                <td class="font-mono">108,753</td>
-                                <td class="text-[#e11d48] font-mono">+13,473</td>
-                                <td class="text-white">31.5%</td>
-                                <td class="text-xs text-neutral-600 font-light">상업 중심지 고령화</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">사하구</td>
-                                <td class="font-mono">99,531</td>
-                                <td class="text-[#e11d48] font-mono">+14,882</td>
-                                <td class="text-white">33.7%</td>
-                                <td class="text-xs text-neutral-600 font-light">산업 인력 노화</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">남구</td>
-                                <td class="font-mono">80,112</td>
-                                <td class="text-[#e11d48] font-mono">+11,204</td>
-                                <td class="text-white">31.2%</td>
-                                <td class="text-xs text-neutral-600 font-light">주거 밀집형 전이</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">금정구</td>
-                                <td class="font-mono">75,812</td>
-                                <td class="text-[#e11d48] font-mono">+8,245</td>
-                                <td class="text-white">35.4%</td>
-                                <td class="text-xs text-neutral-600 font-light">교육 도시에서 은퇴 도시로</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">동래구</td>
-                                <td class="font-mono">75,754</td>
-                                <td class="text-[#e11d48] font-mono">+11,402</td>
-                                <td class="text-white">28.3%</td>
-                                <td class="text-xs text-neutral-600 font-light">상대적 완만한 증가</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="mt-8 text-[11px] text-neutral-700 leading-relaxed font-light">
-                        * 통계청 인구총조사 데이터를 재구성한 수치임. 증감폭은 2020년 대비 2024년 말 기준 순증 수치를 의미함.
-                    </div>
-                </div>
-                <div class="lg:col-span-4 stat-card p-12 flex flex-col">
-                    <h3 class="text-xl font-bold mb-4 tracking-tighter">집중 분석 : <span class="text-[#e11d48]">금정구</span></h3>
-                    <p class="text-sm text-neutral-400 leading-relaxed mb-10 font-light">
-                        금정구는 부산 내 주요 거점 중 고령화 비중이 35.4%로 가장 높게 나타났습니다. 이는 젊은 층이 밀집하던 대학권역조차 고령층 주거지화되고 있음을 시사하며, 학령 인구 감소와 맞물려 지역 경제에 치명적인 영향을 미칠 것으로 예상됩니다.
-                    </p>
-                    <div class="flex-grow min-h-[300px]">
-                        <canvas id="districtBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Part 4: Strategic Recommendations -->
-        <section class="space-y-1">
-            <div class="section-title">04 / Strategic Recommendations</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
-                <div class="stat-card p-12">
-                    <span class="text-[#e11d48] font-mono text-xs mb-6 block tracking-widest">#01 INFRASTRUCTURE</span>
-                    <h3 class="text-2xl font-bold mb-8">도시 기능의 압축과 재배치</h3>
-                    <p class="text-neutral-500 leading-relaxed text-[15px] font-light">
-                        인구가 줄고 늙어감에 따라 광범위하게 퍼진 도시 인프라의 유지비용이 급증하고 있습니다. 고령층의 이동 편의성을 극대화하기 위해 거점별로 공공 서비스를 집중시키는 <span class="text-white underline underline-offset-4 decoration-[#e11d48]">컴팩트 시티(Compact City)</span> 전략으로의 전면 수정이 필요합니다.
-                    </p>
-                </div>
-                <div class="stat-card p-12">
-                    <span class="text-[#e11d48] font-mono text-xs mb-6 block tracking-widest">#02 SILVER ECONOMY</span>
-                    <h3 class="text-2xl font-bold mb-8">고령층의 자립적 경제 구조</h3>
-                    <p class="text-neutral-500 leading-relaxed text-[15px] font-light">
-                        102만 명의 시니어는 단순한 사회적 비용이 아닌 유효한 경제 주체입니다. <span class="text-white underline underline-offset-4 decoration-[#e11d48]">에이징 인 플레이스(Aging in Place)</span>를 실현하기 위해 시니어 주도형 기술 창업과 헬스케어 기반의 지속 가능한 일자리 모델을 발굴하여 도시 활력을 유지해야 합니다.
-                    </p>
-                </div>
-                <div class="stat-card p-12">
-                    <span class="text-[#e11d48] font-mono text-xs mb-6 block tracking-widest">#03 DIGITAL DIVIDE</span>
-                    <h3 class="text-2xl font-bold mb-8">디지털 격차 해소와 AI 케어</h3>
-                    <p class="text-neutral-500 leading-relaxed text-[15px] font-light">
-                        고독사 및 사회적 고립 문제는 부산 고령화의 가장 어두운 단면입니다. <span class="text-white underline underline-offset-4 decoration-[#e11d48]">AI 동행 로봇 및 원격 의료 모니터링</span> 등 스마트 기술을 복지 최전선에 배치하여, 줄어드는 돌봄 노동력을 기술로 보완하는 스마트 복지 체계로 전환해야 합니다.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Final Vision Section -->
-        <section class="p-20 bg-white text-black rounded-sm flex flex-col items-center text-center">
-            <div class="ruby-line mb-10 bg-[#e11d48]"></div>
-            <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 uppercase leading-none">THE NEW <span class="text-[#e11d48]">NORMAL.</span></h2>
-            <p class="text-xl md:text-3xl font-medium leading-relaxed max-w-4xl text-neutral-800">
-                인구 감소와 고령화는 부산만의 문제가 아닌 국가적 현상이지만, 부산은 그 미래를 가장 먼저 살고 있습니다. <br/>
-                <span class="font-black text-black">위기를 위기로 정의하기보다 새로운 표준(New Normal)을 설계하는 기회</span>로 삼아야 합니다.
-            </p>
-            <div class="mt-16 flex gap-12">
-                <div class="text-left">
-                    <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">Publication Date</p>
-                    <p class="text-lg font-bold">2026. 01. 22</p>
-                </div>
-                <div class="text-left">
-                    <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">Source of Truth</p>
-                    <p class="text-lg font-bold">Statistics Korea</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="mt-48 border-t border-neutral-900 py-16 px-8 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-            <div class="space-y-2">
-                <div class="flex items-center gap-6">
-                    <span class="text-[10px] text-neutral-500 font-bold tracking-[0.3em] uppercase">© 2026 BUSAN STRATEGIC LAB</span>
-                    <span class="text-[10px] text-neutral-800">|</span>
-                    <span class="text-[10px] text-neutral-500 font-bold tracking-[0.3em] uppercase">Policy Design Institute</span>
-                </div>
-                <p class="text-[9px] text-neutral-700 font-light">본 보고서는 인구총조사 공공 데이터를 기반으로 분석되었으며 실제 행정 수치와 미세한 차이가 있을 수 있습니다.</p>
-            </div>
-            <div class="flex gap-10">
-                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-[#e11d48] transition-colors font-bold uppercase tracking-widest">Open Data API</span>
-                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-[#e11d48] transition-colors font-bold uppercase tracking-widest">Privacy Policy</span>
-                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-[#e11d48] transition-colors font-bold uppercase tracking-widest">Contact Research</span>
             </div>
         </div>
+    </section>
+
+    <!-- Project Gallery -->
+    <section id="gallery" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-16 gap-4 reveal">
+                <div>
+                    <h2 class="text-5xl font-bold tracking-tighter">Portfolio Gallery</h2>
+                    <p class="opacity-60 mt-4 font-light italic border-l-2 border-[var(--accent-color)] pl-4 text-lg">데이터와 지능이 만나는 가장 뜨거운 지점</p>
+                </div>
+                <div class="text-xs font-mono opacity-40 tracking-widest uppercase">Scroll to explore projects</div>
+            </div>
+
+            <div class="bento-grid" id="projectGrid">
+                <!-- Cards injected by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 px-6 bg-[var(--section-bg)] transition-colors duration-500">
+        <div class="max-w-4xl mx-auto reveal text-center">
+            <div class="mb-12 relative inline-block">
+                <div class="profile-wrapper mb-8">
+                    <img src="image_e4b682.png" 
+                         alt="유가원 캐릭터 프로필" 
+                         class="profile-image shadow-md"
+                         onerror="this.style.display='none'; document.getElementById('fallbackIcon').style.display='flex';">
+                    <div id="fallbackIcon" class="profile-fallback">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-[var(--accent-color)] text-white text-[10px] px-4 py-1.5 font-bold rounded-full shadow-xl z-10">PNU SW</div>
+            </div>
+            <h2 class="text-4xl font-bold mb-4">유 가 원 <span class="font-light text-[var(--accent-color)] opacity-80 ml-2 italic">Yu Gawon</span></h2>
+            <p class="text-lg opacity-80 font-light mb-2">부산대학교 사회과학대학 사회복지학과 22학번</p>
+            <p class="opacity-60 font-light mb-12 max-w-xl mx-auto leading-relaxed text-lg">
+                데이터의 차가운 수치 속에 숨겨진 사람들의 따뜻한 이야기를 발견하고, <br>
+                인간 중심의 기술 활용을 고민하는 사회과학도입니다.
+            </p>
+            <div class="flex justify-center space-x-8">
+                <a href="#" class="text-2xl opacity-40 hover:text-[var(--accent-color)] hover:opacity-100 transition-all hover:-translate-y-1"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-2xl opacity-40 hover:text-[var(--accent-color)] hover:opacity-100 transition-all hover:-translate-y-1"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="text-2xl opacity-40 hover:text-[var(--accent-color)] hover:opacity-100 transition-all hover:-translate-y-1"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-16 px-6 border-t border-[var(--card-border)] text-center">
+        <div class="w-8 h-1 bg-[var(--accent-color)] mx-auto mb-8 rounded-full"></div>
+        <p class="text-[11px] opacity-40 uppercase tracking-[0.4em]">© 2024 AI Literacy Portfolio — Created by <span class="text-[var(--accent-color)] font-extrabold">Yu Gawon</span></p>
     </footer>
 
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 modal-blur hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg-color)] border border-[var(--accent-color)]/20 w-full max-w-3xl rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(196,30,58,0.1)] relative">
+            <button onclick="closeModal()" class="absolute top-8 right-8 text-3xl opacity-30 hover:text-[var(--accent-color)] hover:opacity-100 transition-all">&times;</button>
+            <div id="modalContent" class="p-10 md:p-16">
+                <!-- Content injected by JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        Chart.defaults.color = '#555';
-        Chart.defaults.font.family = "'Pretendard', sans-serif";
-        Chart.defaults.font.size = 11;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
 
-        const years = ['2020', '2021', '2022', '2023', '2024'];
-        const totalPop = [3349016, 3324335, 3295760, 3279604, 3257256];
-        const seniorPop = [892277, 934024, 965387, 997993, 1020554];
-
-        // Main Trend Chart
-        new Chart(document.getElementById('mainChart'), {
-            type: 'line',
-            data: {
-                labels: years,
-                datasets: [
-                    {
-                        label: '고령 인구 수 (급증)',
-                        data: seniorPop,
-                        borderColor: '#e11d48',
-                        backgroundColor: 'rgba(225, 29, 72, 0.1)',
-                        borderWidth: 5,
-                        fill: true,
-                        pointRadius: 6,
-                        pointBackgroundColor: '#e11d48',
-                        pointBorderColor: '#000',
-                        pointBorderWidth: 2,
-                        tension: 0.2
-                    },
-                    {
-                        label: '총 인구 수 (감소)',
-                        data: totalPop,
-                        borderColor: '#333',
-                        borderWidth: 2,
-                        borderDash: [8, 4],
-                        pointRadius: 0,
-                        tension: 0.2
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        display: true, 
-                        position: 'top', 
-                        align: 'end',
-                        labels: { boxWidth: 12, usePointStyle: true, padding: 30, font: { weight: 'bold' } }
-                    },
-                    tooltip: {
-                        backgroundColor: '#111',
-                        padding: 16,
-                        titleFont: { size: 14, weight: 'bold' },
-                        bodyFont: { size: 12 },
-                        borderColor: '#333',
-                        borderWidth: 1
-                    }
-                },
-                scales: {
-                    x: { grid: { display: false }, ticks: { padding: 15, font: { weight: 'bold' } } },
-                    y: { 
-                        position: 'left', 
-                        grid: { color: '#0c0c0c' },
-                        ticks: {
-                            callback: value => (value / 10000).toFixed(0) + '만 명'
-                        }
-                    }
-                }
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
             }
         });
 
-        // Regional Density Bar Chart (Highlighting Geumjeong-gu)
-        new Chart(document.getElementById('districtBarChart'), {
-            type: 'bar',
-            data: {
-                labels: ['해운대', '부산진', '사하', '금정', '동래'],
-                datasets: [{
-                    label: '고령화 비중 (%)',
-                    data: [33.1, 31.5, 33.7, 35.4, 28.3],
-                    backgroundColor: value => value.index === 3 ? '#e11d48' : '#111',
-                    borderColor: value => value.index === 3 ? '#e11d48' : '#222',
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    barThickness: 45
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-                    y: { 
-                        grid: { color: '#0c0c0c' },
-                        min: 20,
-                        max: 40,
-                        ticks: { callback: value => value + '%' }
-                    }
+        const assignments = [
+            { id: 1, title: "AI의 이해", tools: ["NotebookLM", "Gemini"], desc: "노트북LM을 활용하여 AI의 정의, 역사 및 생성형 AI의 핵심 개념을 체계적으로 정리합니다.", detail: "구글의 NotebookLM을 활용하여 방대한 AI 관련 문헌 자료를 업로드하고, AI의 탄생부터 현재의 생성형 AI 열풍까지의 흐름을 분석했습니다. 특히 소스 출처를 기반으로 한 할루시네이션 최소화 정리 기법을 학습했습니다.", link: "./02/index.html" },
+            { id: 2, title: "데이터 스토리텔링", tools: ["Gemini 스토리북"], desc: "공공데이터를 분석하고 인사이트를 도출하여 시각적으로 설득력 있는 리포트를 작성하여 스토리북으로 만들기", detail: "공공데이터 포털에서 확보한 실제 사회 지표들을 Gemini와 함께 다각도로 분석했습니다. 데이터 이면의 인과관계를 파악하고, 이를 독자들에게 효과적으로 전달할 수 있는 '스토리북' 형태의 디지털 리포트로 가공하는 전 과정을 수행했습니다.", link: "./03/index.html" },
+            { id: 3, title: "할루시네이션의 이해", tools: ["Gen AI"], desc: "AI의 한계와 윤리적 오류를 비판적으로 바라보고 대응 방안을 제시합니다.", detail: "역사적 사실 검증을 통해 AI가 생성한 거짓 정보를 포착하고, 이를 수정하기 위한 RAG(검색 증강 생성) 기법의 필요성을 논의했습니다." },
+            { id: 4, title: "데이터로 읽는 사회 현상", tools: ["Matplotlib", "Seaborn"], desc: "수치를 시각적 패턴으로 변환하여 사회 문제의 이면을 통찰합니다.", detail: "국내 1인 가구 빈곤율 데이터를 시각화하여 특정 연령층에서의 심각한 불균형 문제를 발견하고 가설을 설정했습니다." },
+            { id: 5, title: "상상을 현실로: 멀티모달", tools: ["Midjourney", "DALL-E 3"], desc: "추상적 개념을 시각적 콘텐츠로 변환하는 생성 능력을 키웁니다.", detail: "사각지대 없는 복지 서비스를 형상화한 브랜드 아이덴티티와 포스터를 텍스트 가이드만으로 정교하게 제작했습니다." },
+            { id: 6, title: "인사이트 스토리텔링", tools: ["Canva", "ChatGPT"], desc: "분석된 데이터를 토대로 설득력 있는 서사를 구축합니다.", detail: "데이터가 보여주는 경향성을 7단계 서사 구조로 변환하여 정책 제안가들에게 전달하는 카드뉴스 형식의 보고서를 제작했습니다." },
+            { id: 7, title: "AI 기반 동영상 기획", tools: ["Runway", "Luma"], desc: "텍스트와 이미지를 움직임이 있는 스토리로 확장합니다.", detail: "사회복지 캠페인을 위한 30초 분량의 홍보 영상을 AI 툴을 활용해 스토리보드부터 최종 렌더링까지 완성했습니다." },
+            { id: 8, title: "맞춤형 AI 솔루션 설계", tools: ["AI Tools"], desc: "특정 집단의 불편함을 해소하는 AI 서비스 모델을 기획합니다.", detail: "노인 디지털 소외 문제를 해결하기 위한 보이스봇 인터페이스와 맞춤형 UI 시나리오를 설계했습니다." },
+            { id: 9, title: "데이터 대시보드 구축", tools: ["Tableau", "Excel"], desc: "실시간으로 변화하는 데이터를 한눈에 파악하는 시스템을 만듭니다.", detail: "지역구별 복지 시설 현황을 지도로 시각화하여 자원 투입의 효율성을 비교 분석할 수 있는 동적 대시보드를 제작했습니다." },
+            { id: 10, title: "캡스톤: 나의 AI 비전", tools: ["Full Stack"], desc: "한 학기 동안 축적된 역량을 하나의 통합 포트폴리오로 승화시킵니다.", detail: "사회복지학과 22학번 유가원이 그리는 '인간을 위한 AI 리터러시'의 정의와 향후 로드맵을 선언문 형태로 제시했습니다." }
+        ];
+
+        const grid = document.getElementById('projectGrid');
+
+        assignments.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "glass-card p-10 rounded-[2rem] cursor-pointer reveal group relative";
+            card.style.transitionDelay = `${(index % 3) * 0.1}s`;
+            card.onclick = (e) => {
+                // 우측 상단 화살표 아이콘 클릭 시 전파를 방지하고 바로 해당 링크로 이동
+                const arrowBtn = e.target.closest('.arrow-link');
+                if (arrowBtn && item.link) {
+                    e.stopPropagation();
+                    window.location.href = item.link;
+                    return;
                 }
-            }
+                openModal(item);
+            };
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-8">
+                    <span class="text-xs font-mono text-[var(--accent-color)] font-bold opacity-60 uppercase tracking-widest">Assignment ${String(item.id).padStart(2, '0')}</span>
+                    <div class="arrow-link w-10 h-10 rounded-full border border-[var(--accent-color)]/20 flex items-center justify-center group-hover:bg-[var(--accent-color)] group-hover:border-[var(--accent-color)] transition-all transform group-hover:rotate-45">
+                        <i class="fas fa-arrow-right text-[10px] group-hover:text-white transition-all"></i>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 group-hover:text-[var(--accent-color)] transition-colors tracking-tight">${item.title}</h3>
+                <p class="text-sm opacity-50 font-light mb-8 line-clamp-2 leading-relaxed">${item.desc}</p>
+                <div class="flex flex-wrap gap-2">
+                    ${item.tools.map(tool => `<span class="px-3 py-1 bg-[var(--accent-color)]/5 rounded-full text-[10px] font-bold text-[var(--accent-color)] border border-[var(--accent-color)]/10">${tool}</span>`).join('')}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        function openModal(item) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="w-12 h-[3px] bg-[var(--accent-color)] rounded-full"></div>
+                    <span class="text-xs font-mono text-[var(--accent-color)] font-black uppercase tracking-[0.3em]">Project ${item.id}</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 tracking-tighter leading-tight">${item.title}</h2>
+                <div class="flex flex-wrap gap-3 mb-10">
+                    ${item.tools.map(tool => `<span class="px-5 py-2 bg-[var(--accent-color)] text-white rounded-full text-xs font-bold shadow-lg shadow-[var(--accent-color)]/20">${tool}</span>`).join('')}
+                </div>
+                <div class="space-y-8 opacity-80 font-light leading-relaxed">
+                    <p class="text-xl md:text-2xl leading-snug tracking-tight text-[var(--text-color)] font-normal">${item.desc}</p>
+                    <div class="bg-[var(--accent-color)]/5 p-8 rounded-[2rem] border border-[var(--accent-color)]/20 shadow-inner">
+                        <h4 class="text-lg font-bold mb-4 flex items-center text-[var(--accent-color)]">
+                            <i class="fas fa-terminal mr-3 text-sm"></i> Project Insights
+                        </h4>
+                        <p class="text-base md:text-lg opacity-90 leading-relaxed font-light">${item.detail}</p>
+                    </div>
+                </div>
+                <div class="mt-12 pt-10 border-t border-[var(--card-border)] flex flex-col md:flex-row gap-6 justify-between items-center">
+                    <div class="flex flex-col space-y-1">
+                        <span class="text-sm opacity-50 font-mono tracking-tighter">PNU Social Welfare '22 | AI Literacy Case Study</span>
+                        ${item.link ? `<a href="${item.link}" class="text-xs font-bold text-[var(--accent-color)] hover:underline">결과물 자세히 보기 &rarr;</a>` : ''}
+                    </div>
+                    <div class="flex gap-4 w-full md:w-auto">
+                        ${item.link ? `<a href="${item.link}" class="flex-1 md:flex-none text-center text-sm font-bold uppercase tracking-widest bg-[var(--accent-color)] text-white px-10 py-4 rounded-full hover:bg-[var(--accent-light)] transition-all wine-glow">결과물보기</a>` : ''}
+                        <button onclick="closeModal()" class="flex-1 md:flex-none text-sm font-bold uppercase tracking-widest border border-[var(--card-border)] px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all">닫기</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
         });
     </script>
 </body>

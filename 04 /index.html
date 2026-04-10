@@ -1,0 +1,382 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Globe, 
+  Cpu, 
+  Zap, 
+  Terminal, 
+  ShieldCheck, 
+  Code2, 
+  Layers, 
+  Layout,
+  History,
+  Activity,
+  Server,
+  Cloud,
+  Lock,
+  Compass,
+  CheckCircle2,
+  ChevronRight,
+  ExternalLink,
+  Smartphone,
+  Search,
+  Users,
+  MessageSquare,
+  Home,
+  Image as ImageIcon,
+  Download
+} from 'lucide-react';
+
+const App = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 테크니컬 상세 카드 컴포넌트
+  const TechDetailedCard = ({ icon: Icon, title, badge, description, items }) => (
+    <div className="group relative bg-[#0d0d0d] border border-white/5 p-12 rounded-[48px] transition-all duration-700 hover:border-[#C41E3A]/40 overflow-hidden">
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#C41E3A]/5 blur-[80px] group-hover:bg-[#C41E3A]/10 transition-all duration-700" />
+      
+      <div className="flex justify-between items-start mb-12 relative z-10">
+        <div className="w-20 h-20 bg-[#151515] rounded-3xl flex items-center justify-center border border-white/5 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
+          <Icon className="text-[#C41E3A]" size={40} />
+        </div>
+        <div className="text-right">
+          <span className="inline-block text-[10px] font-black tracking-[0.4em] text-[#C41E3A] uppercase bg-[#C41E3A]/10 px-5 py-2 rounded-full mb-3">
+            {badge}
+          </span>
+          <div className="text-[10px] font-bold text-white/20 tracking-widest uppercase">Fundamental Core</div>
+        </div>
+      </div>
+      
+      <h3 className="text-4xl font-bold text-white mb-8 tracking-tighter group-hover:translate-x-2 transition-transform duration-500">
+        {title}
+      </h3>
+      <p className="text-[#888888] leading-relaxed text-[17px] mb-12 font-normal max-w-md">
+        {description}
+      </p>
+      
+      <div className="grid gap-6 pt-10 border-t border-white/5 relative z-10">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-start gap-6 group/item p-4 rounded-3xl hover:bg-white/5 transition-all">
+            <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center shrink-0 group-hover/item:bg-[#C41E3A]/20 transition-colors">
+              <CheckCircle2 size={18} className="text-[#C41E3A]" />
+            </div>
+            <div>
+              <h4 className="text-white text-[15px] font-bold mb-2 group-hover/item:text-[#C41E3A] transition-colors">{item.label}</h4>
+              <p className="text-[#666666] text-[14px] leading-relaxed">{item.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#050505] text-[#a1a1a1] font-inter selection:bg-[#C41E3A] selection:text-white overflow-x-hidden">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700;800;900&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+        .glass-nav { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        
+        @keyframes subtle-float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-20px); }
+        }
+        .animate-float { animation: subtle-float 8s ease-in-out infinite; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C41E3A; }
+      `}</style>
+
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-12 py-8 ${scrollY > 50 ? 'glass-nav py-6' : ''}`}>
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center">
+          <div className="flex items-center cursor-pointer group">
+            <span className="font-black text-white tracking-[-0.04em] text-xl uppercase hover:text-[#C41E3A] transition-colors">
+              Understanding web technology
+            </span>
+          </div>
+
+          <div className="flex items-center gap-12">
+            <div className="hidden lg:flex gap-12 text-[10px] font-black tracking-[0.4em] text-white/30 uppercase">
+              <a href="#history" className="hover:text-white transition-all">Genesis</a>
+              <a href="#elements" className="hover:text-white transition-all">Core Stack</a>
+              <a href="#architecture" className="hover:text-white transition-all">Systems</a>
+              <a href="#hosting" className="hover:text-white transition-all">Infra</a>
+            </div>
+            
+            <div className="h-6 w-[1px] bg-white/10 hidden lg:block" />
+
+            <a 
+              href="../index.html" 
+              className="flex items-center gap-3 px-6 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-[11px] font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300"
+            >
+              <Home size={14} />
+              <span>Home</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center pt-32 px-12 overflow-hidden">
+        <div className="absolute top-0 right-[-10%] w-[800px] h-[800px] bg-[#C41E3A]/10 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#C41E3A]/5 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-[1600px] mx-auto w-full grid lg:grid-cols-12 gap-20 items-center relative z-10">
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-4 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black tracking-[0.5em] text-[#C41E3A] mb-14 uppercase">
+              <span className="w-2 h-2 rounded-full bg-[#C41E3A] animate-pulse" />
+              Intelligence & Structure
+            </div>
+            <h1 className="text-[90px] md:text-[140px] font-black text-white tracking-[-0.08em] leading-[0.8] mb-16">
+              Modern<br />
+              <span className="text-[#C41E3A]">Ecosystem.</span>
+            </h1>
+            <p className="text-2xl text-white/40 max-w-2xl mb-16 leading-relaxed font-light tracking-tight">
+              웹 아키텍처의 근본적인 진화부터 클라우드 인프라의 자동화까지, 2026년 프론트엔드 생태계를 관통하는 기술적 핵심 가치를 분석합니다.
+            </p>
+            <div className="flex items-center gap-12">
+               <div className="flex -space-x-4">
+                 {[1,2,3].map(i => (
+                   <div key={i} className="w-14 h-14 rounded-2xl bg-[#111] border-4 border-[#050505] flex items-center justify-center font-bold text-white/20 text-xs">U{i}</div>
+                 ))}
+               </div>
+               <div>
+                 <div className="text-white font-bold text-lg">4,281+ Verified</div>
+                 <div className="text-white/20 text-[11px] font-black tracking-widest uppercase mt-1">Research Participants</div>
+               </div>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-5 relative animate-float">
+            <div className="relative z-20 bg-[#0d0d0d] border border-white/10 p-12 rounded-[60px] shadow-[0_60px_100px_rgba(0,0,0,0.6)]">
+              <div className="flex justify-between items-center mb-12">
+                <div className="flex gap-3">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#C41E3A]" />
+                  <div className="w-3.5 h-3.5 rounded-full bg-white/5" />
+                  <div className="w-3.5 h-3.5 rounded-full bg-white/5" />
+                </div>
+                <div className="text-[10px] font-black tracking-[0.3em] text-white/20 uppercase">System Status</div>
+              </div>
+              <div className="space-y-8">
+                {[
+                  { label: "Core Performance", val: 98 },
+                  { label: "Network Latency", val: 92 },
+                  { label: "Security Level", val: 100 }
+                ].map((item, idx) => (
+                  <div key={idx}>
+                    <div className="flex justify-between text-[11px] font-black text-white mb-3 uppercase tracking-widest">
+                      <span>{item.label}</span>
+                      <span className="text-[#C41E3A]">{item.val}%</span>
+                    </div>
+                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#C41E3A] transition-all duration-1000" style={{ width: `${item.val}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter 1: History */}
+      <section id="history" className="py-48 px-12 bg-[#080808]">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="grid lg:grid-cols-12 gap-24">
+            <div className="lg:col-span-5">
+              <h2 className="text-[11px] font-black tracking-[0.6em] text-[#C41E3A] mb-10 uppercase">01. Genesis</h2>
+              <h3 className="text-7xl font-bold text-white tracking-tighter leading-[1.0] mb-12">지식의 공유에서<br />지능의 연결로.</h3>
+              <p className="text-xl text-white/40 font-light leading-relaxed mb-12">
+                CERN에서 시작된 텍스트 기반의 하이퍼텍스트는 이제 AI가 스스로 구조를 제안하고 최적화하는 '인텔리전트 웹' 시대로 접어들었습니다.
+              </p>
+              <div className="p-10 bg-[#0d0d0d] border border-white/5 rounded-[40px] group hover:border-[#C41E3A]/30 transition-all">
+                <Compass className="text-[#C41E3A] mb-8" size={32} />
+                <h4 className="text-white text-2xl font-bold mb-4 tracking-tight">W3C Standards</h4>
+                <p className="text-[#666] leading-relaxed">전 세계 모든 개발자가 동일한 규칙 아래 창의성을 발휘할 수 있도록 돕는 웹 표준의 힘을 믿습니다.</p>
+              </div>
+            </div>
+            <div className="lg:col-span-7 space-y-16 py-10">
+              {[
+                { year: '1989', title: 'The Concept of WWW', desc: '팀 버너스리가 제안한 정보 관리 시스템이 웹의 시초가 되었습니다.' },
+                { year: '2010', title: 'Responsive Era', desc: 'HTML5와 CSS3의 등장으로 모든 기기에 최적화된 웹이 가능해졌습니다.' },
+                { year: '2026', title: 'Autonomous Web', desc: 'AI가 실시간으로 사용자 의도를 파악하고 UI를 재구성하는 시대입니다.' }
+              ].map((item, idx) => (
+                <div key={idx} className="flex gap-16 group cursor-default">
+                  <div className="text-5xl font-black text-white/5 group-hover:text-[#C41E3A] transition-all duration-700 w-32 shrink-0">{item.year}</div>
+                  <div className="pt-2 border-t border-white/5 w-full">
+                    <h4 className="text-2xl font-bold text-white mb-3 tracking-tight group-hover:translate-x-2 transition-transform">{item.title}</h4>
+                    <p className="text-lg text-[#555] leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter 2: Core Stack */}
+      <section id="elements" className="py-48 px-12 bg-[#050505]">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="text-center mb-32">
+            <h2 className="text-[11px] font-black tracking-[0.6em] text-[#C41E3A] mb-10 uppercase">02. Fundamental Core</h2>
+            <h3 className="text-7xl font-bold text-white tracking-tighter">현대 웹의 3대 근간</h3>
+          </div>
+          
+          <div className="grid lg:grid-cols-3 gap-10">
+            <TechDetailedCard 
+              icon={Layout}
+              title="HTML"
+              badge="Semantic Backbone"
+              description="단순한 텍스트 배치를 넘어, 데이터의 의미와 구조를 검색 엔진 및 AI 모델에게 정확히 전달하는 지능형 마크업을 지향합니다."
+              items={[
+                { label: "Semantic Mastery", text: "태그 자체에 의미를 담아 기계가 문서를 이해할 수 있도록 SEO와 접근성을 동시에 해결합니다." },
+                { label: "Adaptive Content", text: "기기별 환경에 따라 콘텐츠의 중요도를 유연하게 조절하는 구조적 설계 기법을 활용합니다." },
+                { label: "ARIA Patterns", text: "웹 접근성 표준(ARIA)을 준수하여 장애를 넘어선 보편적인 정보 경험을 제공합니다." },
+                { label: "Shadow DOM", text: "복잡한 컴포넌트 내부 구조를 캡슐화하여 스타일과 로직의 충돌을 원천 차단합니다." }
+              ]}
+            />
+            <TechDetailedCard 
+              icon={Layers}
+              title="CSS"
+              badge="Visual System"
+              description="뷰포트를 넘어선 컨테이너 중심의 레이아웃 설계와, 대규모 시스템에서도 유지보수가 용이한 모던 스타일 시트 전략을 제안합니다."
+              items={[
+                { label: "Container Queries", text: "브라우저 크기가 아닌, 자신이 속한 부모 요소의 크기에 따라 반응하는 진정한 모듈성을 구현합니다." },
+                { label: "Advanced Cascade Layers", text: "@layer 지시어를 통해 대규모 CSS 파일 간의 우선순위 경쟁과 충돌 문제를 완벽히 통제합니다." },
+                { label: "Dynamic Design Tokens", text: "브랜드 아이덴티티를 변수화하여 다크모드, 고대비 모드 등 다양한 환경에 즉각 대응합니다." },
+                { label: "GPU Acceleration", text: "브라우저 하드웨어 가속을 활용해 60fps 이상의 부드러운 애니메이션과 전환 효과를 보장합니다." }
+              ]}
+            />
+            <TechDetailedCard 
+              icon={Code2}
+              title="JavaScript"
+              badge="Logic Engine"
+              description="브라우저의 한계를 넘어서는 고성능 연산과 타입 안전성을 바탕으로, 복잡한 비즈니스 로직을 효율적으로 처리하는 실행 환경을 구축합니다."
+              items={[
+                { label: "Strict TypeScript", text: "정적 타입을 통해 런타임 이전에 오류를 감지하고, 팀 단위 개발 효율성을 200% 이상 향상시킵니다." },
+                { label: "Web Worker Threads", text: "무거운 연산을 별도 스레드로 분리하여 UI 렌더링을 차단하지 않는 쾌적한 사용성을 유지합니다." },
+                { label: "Event-Driven Logic", text: "비동기 프로그래밍 모델을 통해 실시간 데이터 페칭과 상태 변화를 중단 없이 동기화합니다." },
+                { label: "WebAssembly (WASM)", text: "브라우저에서 네이티브 수준의 연산 성능이 필요한 고사양 도구 및 게임 엔진을 실행합니다." }
+              ]}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter 3: Advanced Architecture */}
+      <section id="architecture" className="py-48 px-12 border-t border-white/5">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div>
+              <h2 className="text-[11px] font-black tracking-[0.6em] text-[#C41E3A] mb-10 uppercase">03. Systems</h2>
+              <h3 className="text-7xl font-bold text-white tracking-tighter mb-12 leading-[1.0]">분산된 아키텍처,<br />통합된 경험.</h3>
+              <p className="text-xl text-white/40 leading-relaxed mb-16 max-w-xl">
+                현대 웹은 하나의 덩어리가 아닙니다. 수많은 독립적인 서비스들이 API와 실시간 스트리밍으로 연결되어 하나의 사용자 경험을 완성합니다.
+              </p>
+              
+              <div className="space-y-8">
+                {[
+                  { icon: Server, title: "RESTful API Integration", text: "리소스 중심의 설계를 통해 클라이언트와 서버 간의 느슨한 결합을 구현합니다." },
+                  { icon: Activity, title: "Real-time SSE Streaming", text: "서버 푸시 기술을 활용하여 지연 시간 없는 실시간 데이터 업데이트를 제공합니다." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-8 p-10 bg-[#0d0d0d] rounded-[40px] border border-white/5 hover:border-[#C41E3A]/20 transition-all">
+                    <item.icon size={32} className="text-[#C41E3A] shrink-0" />
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-3 tracking-tight">{item.title}</h4>
+                      <p className="text-[#666] leading-relaxed">{item.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#C41E3A]/5 blur-[120px] rounded-full" />
+              <div className="relative z-10 grid grid-cols-2 gap-6 p-4">
+                {[
+                  { label: "Scalability", val: "High" },
+                  { label: "Fault Tolerance", val: "Reliable" },
+                  { label: "Maintainability", val: "Seamless" },
+                  { label: "Global Latency", val: "20ms" }
+                ].map((stat, i) => (
+                  <div key={i} className="bg-[#0d0d0d] border border-white/5 p-12 rounded-[50px] text-center group hover:bg-[#C41E3A] transition-all duration-500">
+                    <div className="text-[10px] font-black tracking-[0.3em] text-white/20 group-hover:text-white/50 uppercase mb-4">{stat.label}</div>
+                    <div className="text-3xl font-bold text-white">{stat.val}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer & Action Buttons */}
+      <footer className="py-32 px-12 border-t border-white/5 bg-[#080808]">
+        <div className="max-w-[1600px] mx-auto">
+          {/* Action Buttons Section */}
+          <div className="flex flex-col sm:flex-row justify-center gap-6 mb-24">
+            {/* Infographic Button */}
+            <button 
+              onClick={() => window.open('web.png', '_blank')}
+              className="group relative flex items-center gap-4 px-10 py-6 bg-white/5 border border-white/10 rounded-[30px] overflow-hidden hover:border-[#C41E3A]/50 transition-all duration-500 shrink-0"
+            >
+              <div className="absolute inset-0 bg-[#C41E3A]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <ImageIcon className="text-[#C41E3A] relative z-10" size={20} />
+              <span className="text-white font-black tracking-[0.3em] uppercase text-[11px] relative z-10 whitespace-nowrap">View Infographic</span>
+              <ExternalLink className="text-white/20 group-hover:text-white relative z-10 transition-colors" size={14} />
+            </button>
+
+            {/* Download Slide Button */}
+            <a 
+              href="web_ppt.pdf"
+              download="web_ppt.pdf"
+              className="group relative flex items-center gap-4 px-10 py-6 bg-white/5 border border-white/10 rounded-[30px] overflow-hidden hover:border-[#C41E3A]/50 transition-all duration-500 shrink-0"
+            >
+              <div className="absolute inset-0 bg-[#C41E3A]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              <Download className="text-[#C41E3A] relative z-10" size={20} />
+              <span className="text-white font-black tracking-[0.3em] uppercase text-[11px] relative z-10 whitespace-nowrap">Download Slide</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#C41E3A] relative z-10 animate-pulse" />
+            </a>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center gap-16">
+            <div className="text-center md:text-left">
+              <div className="flex items-center gap-5 mb-8 justify-center md:justify-start">
+                <span className="font-black text-white tracking-[-0.04em] text-3xl uppercase">Understanding web technology</span>
+              </div>
+              <p className="text-[12px] font-black text-white/20 tracking-[0.5em] uppercase">Architecture Research & Publication</p>
+            </div>
+            <div className="flex flex-wrap justify-center gap-16 text-[10px] font-black tracking-[0.3em] text-white/30 uppercase">
+               <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
+               <span className="hover:text-white cursor-pointer transition-colors">Contact Expert</span>
+               <span className="hover:text-white cursor-pointer transition-colors">API Docs</span>
+            </div>
+          </div>
+          <div className="mt-24 pt-10 border-t border-white/5 text-center text-[10px] font-bold text-white/10 tracking-widest uppercase">
+            © 2026 Global Web Research Consortium. All Rights Reserved.
+          </div>
+        </div>
+      </footer>
+
+      {/* Floating Action */}
+      <div className="fixed bottom-12 right-12 z-[200]">
+        <button className="group relative w-20 h-20 bg-[#C41E3A] text-white rounded-[24px] shadow-[0_30px_60px_rgba(196,30,58,0.4)] flex items-center justify-center transition-all hover:scale-110 active:scale-95 overflow-hidden">
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          <MessageSquare size={28} className="relative z-10" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default App;

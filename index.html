@@ -80,7 +80,6 @@
             background: rgba(255, 255, 255, 0.85);
         }
 
-        /* Profile Image Optimization */
         .profile-wrapper {
             position: relative;
             width: 160px;
@@ -326,7 +325,7 @@
         const assignments = [
             { id: 1, title: "AI의 이해", tools: ["NotebookLM", "Gemini"], desc: "노트북LM을 활용하여 AI의 정의, 역사 및 생성형 AI의 핵심 개념을 체계적으로 정리합니다.", detail: "구글의 NotebookLM을 활용하여 방대한 AI 관련 문헌 자료를 업로드하고, AI의 탄생부터 현재의 생성형 AI 열풍까지의 흐름을 분석했습니다. 특히 소스 출처를 기반으로 한 할루시네이션 최소화 정리 기법을 학습했습니다.", link: "./02/index.html" },
             { id: 2, title: "데이터 스토리텔링", tools: ["Gemini 스토리북"], desc: "공공데이터를 분석하고 인사이트를 도출하여 시각적으로 설득력 있는 리포트를 작성하여 스토리북으로 만들기", detail: "공공데이터 포털에서 확보한 실제 사회 지표들을 Gemini와 함께 다각도로 분석했습니다. 데이터 이면의 인과관계를 파악하고, 이를 독자들에게 효과적으로 전달할 수 있는 '스토리북' 형태의 디지털 리포트로 가공하는 전 과정을 수행했습니다.", link: "./03/index.html" },
-            { id: 3, title: "할루시네이션의 이해", tools: ["Gen AI"], desc: "AI의 한계와 윤리적 오류를 비판적으로 바라보고 대응 방안을 제시합니다.", detail: "역사적 사실 검증을 통해 AI가 생성한 거짓 정보를 포착하고, 이를 수정하기 위한 RAG(검색 증강 생성) 기법의 필요성을 논의했습니다." },
+            { id: 3, title: "웹기술의 이해", tools: ["HTTP/3", "Client-Server"], desc: "현대 웹의 건축학적 구조와 프론트엔드/백엔드 메커릭즘을 심층적으로 분석합니다.", detail: "웹의 기본 구조인 클라이언트-서버 모델부터 HTML/CSS/JS의 역할, 그리고 HTTP/3와 같은 최신 전송 프로토콜과 MSA 아키텍처까지 웹 기술의 전반적인 흐름을 설계도 관점에서 학습했습니다.", link: "./04/index.html" },
             { id: 4, title: "데이터로 읽는 사회 현상", tools: ["Matplotlib", "Seaborn"], desc: "수치를 시각적 패턴으로 변환하여 사회 문제의 이면을 통찰합니다.", detail: "국내 1인 가구 빈곤율 데이터를 시각화하여 특정 연령층에서의 심각한 불균형 문제를 발견하고 가설을 설정했습니다." },
             { id: 5, title: "상상을 현실로: 멀티모달", tools: ["Midjourney", "DALL-E 3"], desc: "추상적 개념을 시각적 콘텐츠로 변환하는 생성 능력을 키웁니다.", detail: "사각지대 없는 복지 서비스를 형상화한 브랜드 아이덴티티와 포스터를 텍스트 가이드만으로 정교하게 제작했습니다." },
             { id: 6, title: "인사이트 스토리텔링", tools: ["Canva", "ChatGPT"], desc: "분석된 데이터를 토대로 설득력 있는 서사를 구축합니다.", detail: "데이터가 보여주는 경향성을 7단계 서사 구조로 변환하여 정책 제안가들에게 전달하는 카드뉴스 형식의 보고서를 제작했습니다." },
@@ -343,7 +342,6 @@
             card.className = "glass-card p-10 rounded-[2rem] cursor-pointer reveal group relative";
             card.style.transitionDelay = `${(index % 3) * 0.1}s`;
             card.onclick = (e) => {
-                // 우측 상단 화살표 아이콘 클릭 시 전파를 방지하고 바로 해당 링크로 이동
                 const arrowBtn = e.target.closest('.arrow-link');
                 if (arrowBtn && item.link) {
                     e.stopPropagation();

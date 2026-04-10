@@ -54,19 +54,45 @@
             background-color: var(--accent-ruby);
         }
 
-        .btn-home {
+        .btn-nav {
             background: transparent;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .btn-home:hover {
+        .btn-nav:hover {
             border-color: var(--text-primary);
             background-color: var(--text-primary);
             color: var(--bg-base);
         }
 
-        /* 상세 데이터 테이블 스타일 */
+        /* 하단 CTA 버튼 스타일 */
+        .btn-cta {
+            background-color: var(--bg-base);
+            color: white;
+            border: 2px solid var(--bg-base);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 36px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+        }
+        
+        .btn-cta:hover {
+            background-color: transparent;
+            color: var(--bg-base);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
         table { width: 100%; border-collapse: collapse; }
         th { color: var(--text-secondary); font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding: 12px 8px; text-align: left; }
         td { padding: 16px 8px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
@@ -95,9 +121,67 @@
             height: 1px;
             background: var(--border-color);
         }
+
+        /* 비디오 모달 스타일 */
+        #videoModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .close-modal:hover {
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body class="antialiased pb-32">
+
+    <!-- Video Modal -->
+    <div id="videoModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeVideo()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                CLOSE PLAYER
+            </button>
+            <video id="mainVideo" class="w-full h-full" controls>
+                <source src="./SVC.mp4" type="video/mp4">
+                브라우저가 비디오 태그를 지원하지 않습니다.
+            </video>
+        </div>
+    </div>
 
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 px-8 py-5">
@@ -106,10 +190,12 @@
                 <span class="text-xs font-black tracking-[0.2em] uppercase text-white">Busan Aging Report</span>
                 <span class="text-[10px] text-neutral-600 font-mono hidden sm:inline">STRATEGY & DATA ANALYSIS UNIT</span>
             </div>
-            <a href="../index.html" class="btn-home px-5 py-2 rounded-full text-xs font-bold flex items-center gap-2">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                HOME
-            </a>
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="btn-nav px-5 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    HOME
+                </a>
+            </div>
         </div>
     </nav>
 
@@ -212,16 +298,6 @@
                 <div class="chart-container">
                     <canvas id="mainChart"></canvas>
                 </div>
-                <div class="mt-8 pt-8 border-t border-neutral-900 grid grid-cols-2 gap-8">
-                    <div>
-                        <p class="text-[10px] text-neutral-500 uppercase mb-1">Max Population Loss</p>
-                        <p class="text-lg font-mono text-white">-91,760 (-2.7%)</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-neutral-500 uppercase mb-1">Senior Net Growth</p>
-                        <p class="text-lg font-mono text-[#e11d48]">+128,277 (+14.4%)</p>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -289,14 +365,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="mt-8 text-[11px] text-neutral-700 leading-relaxed font-light">
-                        * 통계청 인구총조사 데이터를 재구성한 수치임. 증감폭은 2020년 대비 2024년 말 기준 순증 수치를 의미함.
-                    </div>
                 </div>
                 <div class="lg:col-span-4 stat-card p-12 flex flex-col">
                     <h3 class="text-xl font-bold mb-4 tracking-tighter">집중 분석 : <span class="text-[#e11d48]">금정구</span></h3>
                     <p class="text-sm text-neutral-400 leading-relaxed mb-10 font-light">
-                        금정구는 부산 내 주요 거점 중 고령화 비중이 35.4%로 가장 높게 나타났습니다. 이는 젊은 층이 밀집하던 대학권역조차 고령층 주거지화되고 있음을 시사하며, 학령 인구 감소와 맞물려 지역 경제에 치명적인 영향을 미칠 것으로 예상됩니다.
+                        금정구는 부산 내 주요 거점 중 고령화 비중이 35.4%로 가장 높게 나타났습니다. 이는 젊은 층이 밀집하던 대학권역조차 고령층 주거지화되고 있음을 시사합니다.
                     </p>
                     <div class="flex-grow min-h-[300px]">
                         <canvas id="districtBarChart"></canvas>
@@ -305,74 +378,86 @@
             </div>
         </section>
 
-        <!-- Part 4: Strategic Recommendations -->
-        <section class="space-y-1">
-            <div class="section-title">04 / Strategic Recommendations</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-1">
-                <div class="stat-card p-12">
-                    <span class="text-[#e11d48] font-mono text-xs mb-6 block tracking-widest">#01 INFRASTRUCTURE</span>
-                    <h3 class="text-2xl font-bold mb-8">도시 기능의 압축과 재배치</h3>
-                    <p class="text-neutral-500 leading-relaxed text-[15px] font-light">
-                        인구가 줄고 늙어감에 따라 광범위하게 퍼진 도시 인프라의 유지비용이 급증하고 있습니다. 고령층의 이동 편의성을 극대화하기 위해 거점별로 공공 서비스를 집중시키는 <span class="text-white underline underline-offset-4 decoration-[#e11d48]">컴팩트 시티(Compact City)</span> 전략으로의 전면 수정이 필요합니다.
-                    </p>
+        <!-- Final Vision Section & Action Buttons -->
+        <section class="flex flex-col items-center">
+            <!-- The New Normal White Box -->
+            <div class="w-full p-20 bg-white text-black rounded-sm flex flex-col items-center text-center shadow-sm">
+                <div class="ruby-line mb-10 bg-[#e11d48]"></div>
+                <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 uppercase leading-none">THE NEW <span class="text-[#e11d48]">NORMAL.</span></h2>
+                <p class="text-xl md:text-3xl font-medium leading-relaxed max-w-4xl text-neutral-800">
+                    인구 감소와 고령화는 부산만의 문제가 아닌 국가적 현상이지만, 부산은 그 미래를 가장 먼저 살고 있습니다. <br/>
+                    <span class="font-black text-black">위기를 위기로 정의하기보다 새로운 표준(New Normal)을 설계하는 기회</span>로 삼아야 합니다.
+                </p>
+                <div class="mt-16 flex gap-12">
+                    <div class="text-left">
+                        <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">Publication Date</p>
+                        <p class="text-lg font-bold">2026. 03. 27</p>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">Source of Truth</p>
+                        <p class="text-lg font-bold">Statistics Korea</p>
+                    </div>
                 </div>
-                <div class="stat-card p-12">
-                    <span class="text-[#e11d48] font-mono text-xs mb-6 block tracking-widest">#02 SILVER ECONOMY</span>
-                    <h3 class="text-2xl font-bold mb-8">고령층의 자립적 경제 구조</h3>
-                    <p class="text-neutral-500 leading-relaxed text-[15px] font-light">
-                        102만 명의 시니어는 단순한 사회적 비용이 아닌 유효한 경제 주체입니다. <span class="text-white underline underline-offset-4 decoration-[#e11d48]">에이징 인 플레이스(Aging in Place)</span>를 실현하기 위해 시니어 주도형 기술 창업과 헬스케어 기반의 지속 가능한 일자리 모델을 발굴하여 도시 활력을 유지해야 합니다.
-                    </p>
-                </div>
-                <div class="stat-card p-12">
-                    <span class="text-[#e11d48] font-mono text-xs mb-6 block tracking-widest">#03 DIGITAL DIVIDE</span>
-                    <h3 class="text-2xl font-bold mb-8">디지털 격차 해소와 AI 케어</h3>
-                    <p class="text-neutral-500 leading-relaxed text-[15px] font-light">
-                        고독사 및 사회적 고립 문제는 부산 고령화의 가장 어두운 단면입니다. <span class="text-white underline underline-offset-4 decoration-[#e11d48]">AI 동행 로봇 및 원격 의료 모니터링</span> 등 스마트 기술을 복지 최전선에 배치하여, 줄어드는 돌봄 노동력을 기술로 보완하는 스마트 복지 체계로 전환해야 합니다.
-                    </p>
-                </div>
+            </div>
+            
+            <!-- 하단 버튼 그룹 -->
+            <div class="mt-12 flex flex-wrap justify-center gap-6">
+                <!-- Storybook Button -->
+                <a href="https://gemini.google.com/share/a95de9c017a8" target="_blank" class="btn-cta">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    STORYBOOK
+                </a>
+                
+                <!-- Video Button (Updated) -->
+                <button class="btn-cta" onclick="openVideo()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    WATCH VIDEO
+                </button>
             </div>
         </section>
 
-        <!-- Final Vision Section -->
-        <section class="p-20 bg-white text-black rounded-sm flex flex-col items-center text-center">
-            <div class="ruby-line mb-10 bg-[#e11d48]"></div>
-            <h2 class="text-5xl md:text-8xl font-black tracking-tighter mb-10 uppercase leading-none">THE NEW <span class="text-[#e11d48]">NORMAL.</span></h2>
-            <p class="text-xl md:text-3xl font-medium leading-relaxed max-w-4xl text-neutral-800">
-                인구 감소와 고령화는 부산만의 문제가 아닌 국가적 현상이지만, 부산은 그 미래를 가장 먼저 살고 있습니다. <br/>
-                <span class="font-black text-black">위기를 위기로 정의하기보다 새로운 표준(New Normal)을 설계하는 기회</span>로 삼아야 합니다.
-            </p>
-            <div class="mt-16 flex gap-12">
-                <div class="text-left">
-                    <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">Publication Date</p>
-                    <p class="text-lg font-bold">2026. 01. 22</p>
-                </div>
-                <div class="text-left">
-                    <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-1">Source of Truth</p>
-                    <p class="text-lg font-bold">Statistics Korea</p>
-                </div>
-            </div>
-        </section>
     </main>
 
-    <footer class="mt-48 border-t border-neutral-900 py-16 px-8 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+    <footer class="mt-48 border-t border-neutral-900 py-16 px-8 max-w-7xl mx-auto text-center md:text-left">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="space-y-2">
-                <div class="flex items-center gap-6">
+                <div class="flex items-center justify-center md:justify-start gap-6">
                     <span class="text-[10px] text-neutral-500 font-bold tracking-[0.3em] uppercase">© 2026 BUSAN STRATEGIC LAB</span>
-                    <span class="text-[10px] text-neutral-800">|</span>
-                    <span class="text-[10px] text-neutral-500 font-bold tracking-[0.3em] uppercase">Policy Design Institute</span>
                 </div>
-                <p class="text-[9px] text-neutral-700 font-light">본 보고서는 인구총조사 공공 데이터를 기반으로 분석되었으며 실제 행정 수치와 미세한 차이가 있을 수 있습니다.</p>
             </div>
             <div class="flex gap-10">
-                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-[#e11d48] transition-colors font-bold uppercase tracking-widest">Open Data API</span>
-                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-[#e11d48] transition-colors font-bold uppercase tracking-widest">Privacy Policy</span>
-                <span class="text-[10px] text-neutral-500 cursor-pointer hover:text-[#e11d48] transition-colors font-bold uppercase tracking-widest">Contact Research</span>
+                <span class="text-[10px] text-neutral-500 font-bold uppercase tracking-widest cursor-pointer">Open Data API</span>
+                <span class="text-[10px] text-neutral-500 font-bold uppercase tracking-widest cursor-pointer">Contact</span>
             </div>
         </div>
     </footer>
 
     <script>
+        // 비디오 모달 제어 함수
+        const modal = document.getElementById('videoModal');
+        const video = document.getElementById('mainVideo');
+
+        function openVideo() {
+            modal.style.display = 'flex';
+            video.play().catch(e => console.log("자동 재생이 차단되었습니다."));
+            document.body.style.overflow = 'hidden'; // 스크롤 방지
+        }
+
+        function closeVideo() {
+            modal.style.display = 'none';
+            video.pause();
+            video.currentTime = 0;
+            document.body.style.overflow = 'auto'; // 스크롤 복원
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeVideo();
+            }
+        }
+
+        // Chart.js 설정
         Chart.defaults.color = '#555';
         Chart.defaults.font.family = "'Pretendard', sans-serif";
         Chart.defaults.font.size = 11;
@@ -381,31 +466,27 @@
         const totalPop = [3349016, 3324335, 3295760, 3279604, 3257256];
         const seniorPop = [892277, 934024, 965387, 997993, 1020554];
 
-        // Main Trend Chart
         new Chart(document.getElementById('mainChart'), {
             type: 'line',
             data: {
                 labels: years,
                 datasets: [
                     {
-                        label: '고령 인구 수 (급증)',
+                        label: '고령 인구 수',
                         data: seniorPop,
                         borderColor: '#e11d48',
                         backgroundColor: 'rgba(225, 29, 72, 0.1)',
-                        borderWidth: 5,
+                        borderWidth: 4,
                         fill: true,
-                        pointRadius: 6,
-                        pointBackgroundColor: '#e11d48',
-                        pointBorderColor: '#000',
-                        pointBorderWidth: 2,
+                        pointRadius: 4,
                         tension: 0.2
                     },
                     {
-                        label: '총 인구 수 (감소)',
+                        label: '총 인구 수',
                         data: totalPop,
                         borderColor: '#333',
                         borderWidth: 2,
-                        borderDash: [8, 4],
+                        borderDash: [5, 5],
                         pointRadius: 0,
                         tension: 0.2
                     }
@@ -413,61 +494,28 @@
             },
             options: {
                 maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        display: true, 
-                        position: 'top', 
-                        align: 'end',
-                        labels: { boxWidth: 12, usePointStyle: true, padding: 30, font: { weight: 'bold' } }
-                    },
-                    tooltip: {
-                        backgroundColor: '#111',
-                        padding: 16,
-                        titleFont: { size: 14, weight: 'bold' },
-                        bodyFont: { size: 12 },
-                        borderColor: '#333',
-                        borderWidth: 1
-                    }
-                },
+                plugins: { legend: { display: true, position: 'top', align: 'end' } },
                 scales: {
-                    x: { grid: { display: false }, ticks: { padding: 15, font: { weight: 'bold' } } },
-                    y: { 
-                        position: 'left', 
-                        grid: { color: '#0c0c0c' },
-                        ticks: {
-                            callback: value => (value / 10000).toFixed(0) + '만 명'
-                        }
-                    }
+                    y: { ticks: { callback: value => (value / 10000).toFixed(0) + '만' } }
                 }
             }
         });
 
-        // Regional Density Bar Chart (Highlighting Geumjeong-gu)
         new Chart(document.getElementById('districtBarChart'), {
             type: 'bar',
             data: {
                 labels: ['해운대', '부산진', '사하', '금정', '동래'],
                 datasets: [{
-                    label: '고령화 비중 (%)',
                     data: [33.1, 31.5, 33.7, 35.4, 28.3],
                     backgroundColor: value => value.index === 3 ? '#e11d48' : '#111',
-                    borderColor: value => value.index === 3 ? '#e11d48' : '#222',
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    barThickness: 45
+                    barThickness: 30
                 }]
             },
             options: {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-                    y: { 
-                        grid: { color: '#0c0c0c' },
-                        min: 20,
-                        max: 40,
-                        ticks: { callback: value => value + '%' }
-                    }
+                    y: { min: 20, max: 40, ticks: { callback: value => value + '%' } }
                 }
             }
         });

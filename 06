@@ -1,0 +1,188 @@
+import React, { useMemo } from 'react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
+import { AlertTriangle, TrendingUp, TrendingDown, Users, Car } from 'lucide-react';
+
+const App = () => {
+  // 데이터셋
+  const data = [
+    { year: '2020년', total: 209654, senior: 31072, ratio: 14.8 },
+    { year: '2021년', total: 203130, senior: 31841, ratio: 15.7 },
+    { year: '2022년', total: 196836, senior: 34652, ratio: 17.6 },
+    { year: '2023년', total: 198296, senior: 39614, ratio: 20.0 },
+    { year: '2024년', total: 196349, senior: 42369, ratio: 21.6 },
+  ];
+
+  const latestData = data[data.length - 1];
+  const firstData = data[0];
+
+  // 주요 지표 계산
+  const totalChange = ((latestData.total - firstData.total) / firstData.total * 100).toFixed(1);
+  const seniorChange = ((latestData.senior - firstData.senior) / firstData.senior * 100).toFixed(1);
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
+      <div className="max-w-6xl mx-auto space-y-8">
+        
+        {/* 헤더 섹션 */}
+        <header className="text-center space-y-2 border-b pb-6">
+          <div className="inline-flex items-center justify-center p-2 bg-red-100 text-red-600 rounded-full mb-2">
+            <AlertTriangle size={24} />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            교통사고 지형도의 변화: <span className="text-red-600">고령 운전자 리스크</span>
+          </h1>
+          <p className="text-slate-500 text-lg">2020년 ~ 2024년 사고 현황 분석 데이터</p>
+        </header>
+
+        {/* 주요 지표 카드 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-500 font-medium">전체 사고 건수</span>
+              <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><TrendingDown size={20} /></div>
+            </div>
+            <div className="mt-4">
+              <div className="text-3xl font-bold">{latestData.total.toLocaleString()}건</div>
+              <div className="text-blue-600 text-sm font-medium mt-1">5년 전 대비 {totalChange}% 감소</div>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-500 font-medium">고령 운전자 사고</span>
+              <div className="p-2 bg-red-50 text-red-600 rounded-lg"><TrendingUp size={20} /></div>
+            </div>
+            <div className="mt-4">
+              <div className="text-3xl font-bold text-red-600">{latestData.senior.toLocaleString()}건</div>
+              <div className="text-red-600 text-sm font-medium mt-1">5년 전 대비 +{seniorChange}% 급증</div>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-500 font-medium">사고 점유율 (비중)</span>
+              <div className="p-2 bg-amber-50 text-amber-600 rounded-lg"><Users size={20} /></div>
+            </div>
+            <div className="mt-4">
+              <div className="text-3xl font-bold text-amber-600">{latestData.ratio}%</div>
+              <div className="text-amber-600 text-sm font-medium mt-1">사고 5건 중 1건 이상 발생</div>
+            </div>
+          </div>
+        </div>
+
+        {/* 메인 차트 영역 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* 사고 추이 비교 차트 */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+              <Car className="text-slate-400" /> 사고 추이 대조 분석
+            </h3>
+            <div className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 10 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
+                  <YAxis hide />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                  />
+                  <Legend iconType="circle" />
+                  <Line 
+                    name="전체 사고 (하락세)" 
+                    type="monotone" 
+                    dataKey="total" 
+                    stroke="#94a3b8" 
+                    strokeWidth={3} 
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line 
+                    name="고령자 사고 (상승세)" 
+                    type="monotone" 
+                    dataKey="senior" 
+                    stroke="#ef4444" 
+                    strokeWidth={4} 
+                    dot={{ r: 6, fill: '#ef4444' }}
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="mt-4 text-sm text-slate-500 bg-slate-50 p-3 rounded-lg">
+              * 전체 사고는 우하향 곡선을 그리며 감소하고 있으나, 고령 운전자 사고는 독자적으로 우상향 곡선을 그리는 <strong>'디커플링(탈동조화)'</strong> 현상이 뚜렷함.
+            </p>
+          </div>
+
+          {/* 비중 변화 바 차트 */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+              <TrendingUp className="text-amber-500" /> 연도별 사고 점유율 변화 (%)
+            </h3>
+            <div className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 10 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
+                  <YAxis axisLine={false} tickLine={false} unit="%" />
+                  <Tooltip 
+                    cursor={{fill: '#f8fafc'}}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                  />
+                  <Bar dataKey="ratio" name="점유율" radius={[8, 8, 0, 0]}>
+                    {data.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={index === data.length - 1 ? '#f59e0b' : '#fbbf24'} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-6 flex items-center justify-center gap-12 border-t pt-6">
+              <div className="text-center">
+                <div className="text-sm text-slate-400">2020년 비중</div>
+                <div className="text-2xl font-bold text-slate-400">{firstData.ratio}%</div>
+              </div>
+              <div className="text-3xl font-light text-slate-300">→</div>
+              <div className="text-center">
+                <div className="text-sm text-amber-600 font-semibold">2024년 비중</div>
+                <div className="text-3xl font-black text-amber-500">{latestData.ratio}%</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* 요약 결론 섹션 */}
+        <div className="bg-slate-900 text-white p-8 rounded-3xl overflow-hidden relative">
+          <div className="relative z-10 max-w-2xl">
+            <h2 className="text-2xl font-bold mb-4">시사점: "단순한 증가를 넘어선 위기"</h2>
+            <ul className="space-y-3 text-slate-300">
+              <li className="flex gap-2">
+                <span className="text-red-500 font-bold">●</span>
+                <span>교통안전 기술 발달로 전체 사고는 감소하나 고령화 속도가 이를 압도함</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-red-500 font-bold">●</span>
+                <span>사고 비중이 5년 만에 14%에서 21.6%로 급등하며 정책적 임계점 도달</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-red-500 font-bold">●</span>
+                <span>인지 능력 보완 장치 및 이동권 보장을 위한 새로운 모빌리티 체계 시급</span>
+              </li>
+            </ul>
+          </div>
+          {/* 데코레이션 요소 */}
+          <div className="absolute top-1/2 -right-20 transform -translate-y-1/2 opacity-10">
+             <AlertTriangle size={300} />
+          </div>
+        </div>
+
+        <footer className="text-center text-slate-400 text-sm pb-8">
+          Source: 교통사고_고령운전자 분석 데이터 (2020-2024) | Created by Gemini
+        </footer>
+      </div>
+    </div>
+  );
+};
+
+export default App;

@@ -1,176 +1,202 @@
-import React from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { AlertTriangle, TrendingUp, TrendingDown, Users, Car, ShieldAlert } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고령 운전자 교통사고 인포그래픽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Inter', 'Pretendard', sans-serif;
+            background-color: #000000;
+        }
+        .ruby-glow {
+            box-shadow: 0 0 30px rgba(224, 17, 95, 0.1);
+        }
+        .ruby-text {
+            color: #E0115F;
+        }
+        .ruby-bg {
+            background-color: #E0115F;
+        }
+        .ruby-border {
+            border-color: rgba(224, 17, 95, 0.5);
+        }
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body class="text-slate-200">
+    <div class="min-h-screen p-4 md:p-10">
+        <div class="max-w-6xl mx-auto space-y-10">
+            
+            <!-- 헤더 섹션 -->
+            <header class="relative overflow-hidden rounded-3xl bg-[#080808] p-10 border border-[#222222]">
+                <div class="relative z-10 flex flex-col items-center text-center space-y-4">
+                    <div class="p-4 bg-[#E0115F]/10 text-[#E0115F] rounded-2xl border border-[#E0115F]/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m12 8-4 4"/><path d="m12 12 4 4"/></svg>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase">
+                        The <span class="ruby-text">Ruby</span> Crisis
+                    </h1>
+                    <p class="text-slate-500 text-lg max-w-2xl font-medium">
+                        고령 운전자 교통사고: 데이터가 경고하는 대한민국 도로의 현주소
+                    </p>
+                </div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 ruby-bg opacity-50 blur-sm"></div>
+            </header>
 
-const App = () => {
-  // 데이터셋
-  const data = [
-    { year: '2020', total: 209654, senior: 31072, ratio: 14.8 },
-    { year: '2021', total: 203130, senior: 31841, ratio: 15.7 },
-    { year: '2022', total: 196836, senior: 34652, ratio: 17.6 },
-    { year: '2023', total: 198296, senior: 39614, ratio: 20.0 },
-    { year: '2024', total: 196349, senior: 42369, ratio: 21.6 },
-  ];
+            <!-- 주요 지표 카드 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-slate-500 text-sm font-bold uppercase tracking-widest">Total Accidents</span>
+                        <span class="text-blue-500 font-bold">↓ 6.3%</span>
+                    </div>
+                    <div id="stat-total" class="text-4xl font-bold text-white tracking-tight">196,349</div>
+                    <div class="text-blue-500/80 text-xs mt-2 font-bold uppercase tracking-tighter">Overall Decrease</div>
+                </div>
 
-  const latestData = data[data.length - 1];
-  const firstData = data[0];
+                <div class="bg-[#0A0A0A] p-8 rounded-3xl border ruby-border ruby-glow">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-[#FF4D8D] text-sm font-bold uppercase tracking-widest">Senior Driver</span>
+                        <span class="ruby-text font-bold">↑ 36.3%</span>
+                    </div>
+                    <div id="stat-senior" class="text-4xl font-bold ruby-text tracking-tight">42,369</div>
+                    <div class="text-[#E0115F] text-xs mt-2 font-bold uppercase tracking-tighter">5-Year Surge</div>
+                </div>
 
-  // 주요 지표 계산
-  const totalChange = ((latestData.total - firstData.total) / firstData.total * 100).toFixed(1);
-  const seniorChange = ((latestData.senior - firstData.senior) / firstData.senior * 100).toFixed(1);
-
-  // 블랙 & 루비 테마 컬러 정의
-  const COLORS = {
-    ruby: '#E0115F',
-    pureBlack: '#000000',
-    deepGray: '#111111',
-    borderGray: '#222222',
-    textGray: '#94a3b8'
-  };
-
-  return (
-    <div className="min-h-screen bg-[#000000] p-4 md:p-10 font-sans text-slate-200">
-      <div className="max-w-6xl mx-auto space-y-10">
-        
-        {/* 헤더 섹션 - 완전 블랙 배경에 그라데이션 포인트 */}
-        <header className="relative overflow-hidden rounded-3xl bg-[#080808] p-10 border border-[#222222]">
-          <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-            <div className="p-4 bg-[#E0115F]/10 text-[#E0115F] rounded-2xl border border-[#E0115F]/20 shadow-[0_0_15px_rgba(224,17,95,0.1)]">
-              <ShieldAlert size={36} />
+                <div class="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-slate-500 text-sm font-bold uppercase tracking-widest">Accident Ratio</span>
+                        <span class="text-slate-400 font-bold">21.6%</span>
+                    </div>
+                    <div id="stat-ratio" class="text-4xl font-bold text-white tracking-tight">21.6%</div>
+                    <div class="text-slate-500 text-xs mt-2 font-bold uppercase tracking-tighter">Critical Share Reached</div>
+                </div>
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase">
-              The <span className="text-[#E0115F]">Ruby</span> Crisis
-            </h1>
-            <p className="text-slate-500 text-lg max-w-2xl font-medium">
-              고령 운전자 교통사고: 데이터가 경고하는 대한민국 도로의 현주소
-            </p>
-          </div>
-          {/* 장식용 레드 글로우 */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-[#E0115F] opacity-50 blur-sm"></div>
-        </header>
 
-        {/* 주요 지표 카드 - 카드 배경도 더 어둡게 조정 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A] transition-all hover:border-[#333333]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-slate-500 text-sm font-bold uppercase tracking-widest">Total Accidents</span>
-              <TrendingDown size={18} className="text-blue-500" />
-            </div>
-            <div className="text-4xl font-bold text-white tracking-tight">{latestData.total.toLocaleString()}</div>
-            <div className="text-blue-500/80 text-xs mt-2 font-bold uppercase tracking-tighter">Overall {totalChange}% Decrease</div>
-          </div>
+            <!-- 메인 차트 영역 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- 사고 추이 비교 차트 -->
+                <div class="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
+                    <h3 class="text-lg font-bold mb-8 flex items-center gap-3 text-white uppercase tracking-tight">
+                        <div class="w-1 h-6 ruby-bg"></div> Trend Divergence
+                    </h3>
+                    <div class="h-[300px] w-full">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
 
-          <div className="bg-[#0A0A0A] p-8 rounded-3xl border border-[#E0115F]/50 shadow-[0_0_30px_rgba(224,17,95,0.05)]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[#FF4D8D] text-sm font-bold uppercase tracking-widest">Senior Driver</span>
-              <TrendingUp size={18} className="text-[#E0115F]" />
+                <!-- 비중 변화 바 차트 -->
+                <div class="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
+                    <h3 class="text-lg font-bold mb-8 flex items-center gap-3 text-white uppercase tracking-tight">
+                        <div class="w-1 h-6 ruby-bg"></div> Percentage Shift
+                    </h3>
+                    <div class="h-[300px] w-full">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
             </div>
-            <div className="text-4xl font-bold text-[#E0115F] tracking-tight">{latestData.senior.toLocaleString()}</div>
-            <div className="text-[#E0115F] text-xs mt-2 font-bold uppercase tracking-tighter">5-Year +{seniorChange}% Surge</div>
-          </div>
 
-          <div className="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-slate-500 text-sm font-bold uppercase tracking-widest">Accident Ratio</span>
-              <Users size={18} className="text-slate-400" />
-            </div>
-            <div className="text-4xl font-bold text-white tracking-tight">{latestData.ratio}%</div>
-            <div className="text-slate-500 text-xs mt-2 font-bold uppercase tracking-tighter">Critical Share Reached</div>
-          </div>
+            <!-- 푸터 섹션 -->
+            <footer class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-[#1A1A1A] text-slate-600 text-[11px] gap-4 font-bold uppercase tracking-widest">
+                <p>© 2024 Traffic Safety Intelligence - Ruby Red Protocol (Vanilla JS)</p>
+                <div class="flex gap-6">
+                    <span class="ruby-text">Priority: High</span>
+                    <span>Data Source: KOTI / Police DB</span>
+                </div>
+            </footer>
         </div>
-
-        {/* 메인 차트 영역 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* 사고 추이 비교 차트 */}
-          <div className="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
-            <h3 className="text-lg font-bold mb-8 flex items-center gap-3 text-white uppercase tracking-tight">
-              <div className="w-1 h-6 bg-[#E0115F]"></div> Trend Divergence
-            </h3>
-            <div className="h-[350px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
-                  <CartesianGrid strokeDasharray="0" vertical={false} stroke="#1A1A1A" />
-                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#444444', fontSize: 12, fontWeight: 700}} />
-                  <YAxis hide />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#000', border: '1px solid #E0115F', borderRadius: '8px', color: '#fff' }}
-                  />
-                  <Legend verticalAlign="top" align="right" height={36} />
-                  <Line 
-                    name="전체 사고" 
-                    type="monotone" 
-                    dataKey="total" 
-                    stroke="#333333" 
-                    strokeWidth={2} 
-                    dot={false}
-                  />
-                  <Line 
-                    name="고령자 사고" 
-                    type="monotone" 
-                    dataKey="senior" 
-                    stroke="#E0115F" 
-                    strokeWidth={4} 
-                    dot={{ r: 6, fill: '#E0115F', stroke: '#000', strokeWidth: 2 }}
-                    activeDot={{ r: 8, stroke: '#fff', strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* 비중 변화 바 차트 */}
-          <div className="bg-[#0A0A0A] p-8 rounded-3xl border border-[#1A1A1A]">
-            <h3 className="text-lg font-bold mb-8 flex items-center gap-3 text-white uppercase tracking-tight">
-              <div className="w-1 h-6 bg-[#E0115F]"></div> Percentage Shift
-            </h3>
-            <div className="h-[350px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 10 }}>
-                  <CartesianGrid strokeDasharray="0" vertical={false} stroke="#1A1A1A" />
-                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#444444', fontSize: 12, fontWeight: 700}} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#333', fontSize: 10}} unit="%" />
-                  <Tooltip 
-                    cursor={{fill: '#111'}}
-                    contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '8px' }}
-                  />
-                  <Bar dataKey="ratio" name="점유율" radius={[4, 4, 0, 0]}>
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={index === data.length - 1 ? '#E0115F' : '#222222'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="mt-8 flex items-end justify-between bg-[#000000] p-6 rounded-2xl border border-[#1A1A1A]">
-              <div className="space-y-1">
-                <div className="text-[10px] text-slate-600 font-black uppercase tracking-[0.2em]">Baseline 2020</div>
-                <div className="text-3xl font-bold text-slate-700">{firstData.ratio}%</div>
-              </div>
-              <div className="text-[#E0115F] pb-1 animate-bounce">
-                <TrendingUp size={24} />
-              </div>
-              <div className="text-right space-y-1">
-                <div className="text-[10px] text-[#FF4D8D] font-black uppercase tracking-[0.2em]">Peak 2024</div>
-                <div className="text-4xl font-black text-[#E0115F]">{latestData.ratio}%</div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* 푸터 섹션 */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-[#1A1A1A] text-slate-600 text-[11px] gap-4 font-bold uppercase tracking-widest">
-          <p>© 2024 Traffic Safety Intelligence - Ruby Red Protocol</p>
-          <div className="flex gap-6">
-            <span className="text-[#E0115F] shadow-[0_0_10px_rgba(224,17,95,0.2)]">Priority: High</span>
-            <span>Data Source: KOTI / Police DB</span>
-          </div>
-        </div>
-      </div>
     </div>
-  );
-};
 
-export default App;
-                  
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartData = [
+                { year: '2020', total: 209654, senior: 31072, ratio: 14.8 },
+                { year: '2021', total: 203130, senior: 31841, ratio: 15.7 },
+                { year: '2022', total: 196836, senior: 34652, ratio: 17.6 },
+                { year: '2023', total: 198296, senior: 39614, ratio: 20.0 },
+                { year: '2024', total: 196349, senior: 42369, ratio: 21.6 }
+            ];
+
+            const labels = chartData.map(d => d.year);
+            const rubyColor = '#E0115F';
+            const grayColor = '#333333';
+
+            // Line Chart
+            new Chart(document.getElementById('lineChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '전체 사고',
+                            data: chartData.map(d => d.total),
+                            borderColor: grayColor,
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            tension: 0.4
+                        },
+                        {
+                            label: '고령자 사고',
+                            data: chartData.map(d => d.senior),
+                            borderColor: rubyColor,
+                            borderWidth: 4,
+                            pointRadius: 6,
+                            pointBackgroundColor: rubyColor,
+                            pointBorderColor: '#000',
+                            pointBorderWidth: 2,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', align: 'end', labels: { color: '#64748b', boxWidth: 10, font: { size: 10, weight: 'bold' } } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#444', font: { size: 12, weight: 'bold' } } },
+                        y: { display: false }
+                    }
+                }
+            });
+
+            // Bar Chart
+            new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '점유율 (%)',
+                        data: chartData.map(d => d.ratio),
+                        backgroundColor: chartData.map((d, i) => i === chartData.length - 1 ? rubyColor : '#222222'),
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#444', font: { size: 12, weight: 'bold' } } },
+                        y: { 
+                            grid: { color: '#1A1A1A' },
+                            ticks: { color: '#333', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

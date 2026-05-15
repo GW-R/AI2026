@@ -3,302 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Re-Discover BUSAN | 다크 모드 에디션</title>
+    <title>AI Literacy Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; scroll-behavior: smooth; background-color: #0a0a0c; color: #e2e8f0; }
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@100;300;400;700&display=swap');
         
         :root {
-            --point-blue: #3b82f6;
-            --electric-blue: #60a5fa;
-            --dark-surface: #161b22;
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --accent-color: #c41e3a; /* Vivid Ruby Wine */
+            --accent-light: #ff2b4e;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --sub-text: #94a3b8;
+            --section-bg: #050505;
+            --nav-bg: rgba(0, 0, 0, 0.5);
         }
 
-        .hero-gradient {
-            background: linear-gradient(to bottom, rgba(10, 10, 12, 0.8), #0a0a0c), url('https://images.unsplash.com/photo-1578652233219-c637042a3928?auto=format&fit=crop&q=80&w=1600');
-            background-size: cover;
-            background-position: center;
+        .light-mode {
+            --bg-color: #fcfcfc;
+            --text-color: #000000;
+            --accent-color: #b91c1c; /* Strong Red */
+            --accent-light: #dc2626;
+            --card-bg: rgba(0, 0, 0, 0.02);
+            --card-border: rgba(0, 0, 0, 0.08);
+            --sub-text: #4b5563;
+            --section-bg: #f3f4f6;
+            --nav-bg: rgba(252, 252, 252, 0.8);
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         .glass-card {
-            background: rgba(22, 27, 34, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .glass-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--point-blue);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
+            transform: scale(1.03);
+            border-color: var(--accent-color);
+            box-shadow: 0 20px 40px rgba(196, 30, 58, 0.15);
         }
 
-        .blue-glow {
-            text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
-        .gradient-text {
-            background: linear-gradient(45deg, #60a5fa, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
 
-        .nav-blur {
-            background: rgba(10, 10, 12, 0.8);
-            backdrop-filter: blur(8px);
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .stat-item {
-            border-left: 2px solid rgba(59, 130, 246, 0.3);
-            padding-left: 1.5rem;
+        .modal-blur {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.85);
         }
 
-        /* 스크롤바 커스텀 */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0c; }
-        ::-webkit-scrollbar-thumb { background: #2d333b; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--point-blue); }
+        .light-mode .modal-blur {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .profile-wrapper {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: white; 
+            padding: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: contain;
+            transition: all 0.4s ease;
+        }
+
+        .profile-wrapper:hover .profile-image {
+            transform: scale(1.1);
+        }
+
+        .profile-wrapper:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(196, 30, 58, 0.3);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(196, 30, 58, 0.05);
+        }
+
+        .text-accent {
+            color: var(--accent-color);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 10px;
+        }
+        
+        .wine-glow {
+            box-shadow: 0 0 25px rgba(196, 30, 58, 0.4);
+        }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="selection:bg-[var(--accent-color)] selection:text-white">
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 nav-blur border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter text-white">RE<span class="text-blue-500">:</span>BUSAN</div>
-            <div class="space-x-8 hidden md:flex text-sm font-medium text-gray-400">
-                <a href="#vision" class="hover:text-blue-400 transition-colors">VISION</a>
-                <a href="#contents" class="hover:text-blue-400 transition-colors">PLAN & DETAIL</a>
-                <a href="#impact" class="hover:text-blue-400 transition-colors">IMPACT</a>
+    <nav class="fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center bg-[var(--nav-bg)] backdrop-blur-md border-b border-white/5">
+        <div class="text-xl font-bold tracking-tighter flex items-center">
+            <span class="w-3 h-3 bg-[var(--accent-color)] rounded-full mr-2 shadow-[0_0_10px_var(--accent-color)]"></span>
+            AI LITERACY
+        </div>
+        <div class="flex items-center space-x-8">
+            <div class="hidden md:flex space-x-8 text-sm font-light uppercase tracking-widest">
+                <a href="#hero" class="hover:text-[var(--accent-color)] transition-colors">Home</a>
+                <a href="#intro" class="hover:text-[var(--accent-color)] transition-colors">Goal</a>
+                <a href="#gallery" class="hover:text-[var(--accent-color)] transition-colors">Portfolio</a>
+                <a href="#about" class="hover:text-[var(--accent-color)] transition-colors">About</a>
             </div>
-            <div class="flex items-center">
-                <a href="../index.html" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors py-2 px-4 border border-white/10 rounded-full bg-white/5" title="홈으로 이동">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <span class="text-sm font-bold tracking-wide">Home</span>
-                </a>
-            </div>
+            <button id="themeToggle" class="theme-toggle">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="hero-gradient h-screen flex flex-col justify-center items-center text-center px-4 relative">
-        <div class="animate__animated animate__fadeIn">
-            <span class="inline-block px-4 py-1 border border-blue-500/30 rounded-full text-blue-400 text-sm font-bold mb-6 bg-blue-500/5">
-                2024 Busan Tourism Strategic Initiative
-            </span>
-            <h1 class="text-6xl md:text-8xl font-black mb-6 text-white tracking-tight">
-                콘크리트 숲 너머, <br><span class="gradient-text blue-glow">살아있는 부산</span>
-            </h1>
-            <p class="text-lg md:text-xl mb-10 text-gray-400 max-w-3xl font-light leading-relaxed mx-auto">
-                "양산형 도시"라는 차가운 비판을 뜨거운 혁신의 동력으로 바꿉니다.<br>
-                아파트가 랜드마크가 아닌, 사람과 서사가 랜드마크가 되는 새로운 관광 생태계.
-            </p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="#contents" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-xl font-bold transition-all shadow-lg shadow-blue-600/20">
-                    전략 리포트 보기
-                </a>
-                <a href="#vision" class="bg-white/5 hover:bg-white/10 text-white px-10 py-4 rounded-xl font-bold transition-all border border-white/10">
-                    데이터 분석 결과
-                </a>
-            </div>
+    <section id="hero" class="relative min-h-screen flex flex-col justify-center items-center px-6 text-center">
+        <div class="absolute inset-0 overflow-hidden -z-10">
+            <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[var(--accent-color)] opacity-[0.12] rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[var(--accent-color)] opacity-[0.05] rounded-full blur-[150px]"></div>
         </div>
-    </header>
-
-    <!-- Detailed Vision & Data Section -->
-    <section id="vision" class="py-32 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid md:grid-cols-2 gap-20 items-center">
-                <div>
-                    <h2 class="text-4xl font-black mb-8 text-white leading-tight">댓글 3,300개가 <br>증명한 부산의 이면</h2>
-                    <div class="space-y-8">
-                        <div class="stat-item">
-                            <h4 class="text-blue-400 font-bold text-lg mb-1">정체성 상실 지적</h4>
-                            <p class="text-gray-400 text-sm">"전통문화는 서울·경주에 밀리고, 현대문화는 양산형 프랜차이즈뿐"이라는 날카로운 비판</p>
-                        </div>
-                        <div class="stat-item border-red-500/30">
-                            <h4 class="text-red-400 font-bold text-lg mb-1">지역 소멸의 징후</h4>
-                            <p class="text-gray-400 text-sm">관광객은 늘지만 "젊은 사람들이 떠나가는 안타까운 도시"라는 자조적 반응</p>
-                        </div>
-                        <div class="stat-item border-yellow-500/30">
-                            <h4 class="text-yellow-400 font-bold text-lg mb-1">신뢰의 위기</h4>
-                            <p class="text-gray-400 text-sm">"제주도보다 낫지만 바가지는 여전하다"는 관광 인프라에 대한 불신</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-12 rounded-[2.5rem] relative overflow-hidden">
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl"></div>
-                    <h3 class="text-xl font-bold mb-6 text-blue-400">Project Mission</h3>
-                    <p class="text-gray-300 mb-8 leading-relaxed italic">
-                        "우리는 아파트 분양가가 아닌, 골목길의 서사가 도시의 가치를 결정한다고 믿습니다. '노인과 아파트의 도시'라는 오명을 벗고, '청년과 로컬의 도시'로 나아갑니다."
-                    </p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-bold">RE</div>
-                        <div>
-                            <p class="text-white font-bold text-sm">RE:BUSAN 기획단</p>
-                            <p class="text-gray-500 text-xs">Citizen-Driven Innovation</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Deep Dive Contents Section -->
-    <section id="contents" class="py-32 bg-[#0d1117] px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-24">
-                <span class="text-blue-500 font-bold tracking-widest uppercase text-sm">Detailed Action Plan</span>
-                <h2 class="text-5xl font-black text-white mt-4">데이터 응답형 3대 전략</h2>
-            </div>
-
-            <!-- Strategy 01 -->
-            <div class="mb-32">
-                <div class="grid md:grid-cols-2 gap-16 items-center">
-                    <div class="order-2 md:order-1">
-                        <span class="text-blue-500 font-bold text-5xl mb-4 block opacity-20">01</span>
-                        <h3 class="text-3xl font-bold text-white mb-6">산복도로 바이브 (Sanbok Vibe)<br><span class="text-lg font-light text-gray-400">: 획일화된 난개발에 대한 대안</span></h3>
-                        <p class="text-gray-400 mb-8 leading-relaxed">
-                            엘시티와 아이파크가 부산의 전부가 아닙니다. 피란수도의 애환이 서린 산복도로의 굴곡진 지형과 집들을 보존하고, 이를 청년들의 창업 공간으로 전환합니다. 
-                        </p>
-                        <ul class="space-y-4">
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                <span class="text-gray-300"><b>공간 재생:</b> 방치된 빈집 100곳을 청년 아티스트 레지던시로 전환</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                <span class="text-gray-300"><b>체험 투어:</b> 산복도로의 역사를 담은 '계단 위 카페' 투어 코스 개발</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="order-1 md:order-2 glass-card aspect-video rounded-3xl overflow-hidden bg-gradient-to-tr from-blue-900/40 to-black p-1 flex items-center justify-center">
-                        <div class="text-center p-8">
-                            <div class="text-6xl mb-4">🏠</div>
-                            <p class="text-xs text-blue-400 font-mono">[Image: 산복도로 야경 드로잉 스팟]</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Strategy 02 -->
-            <div class="mb-32">
-                <div class="grid md:grid-cols-2 gap-16 items-center">
-                    <div class="glass-card aspect-video rounded-3xl overflow-hidden bg-gradient-to-tr from-blue-600/20 to-black p-1 flex items-center justify-center">
-                        <div class="text-center p-8">
-                            <div class="text-6xl mb-4">🍜</div>
-                            <p class="text-xs text-blue-400 font-mono">[Image: 투명한 정찰제 미식 가이드]</p>
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text-blue-500 font-bold text-5xl mb-4 block opacity-20">02</span>
-                        <h3 class="text-3xl font-bold text-white mb-6 text-right md:text-left">착한 미식 패스 (Honest Bite)<br><span class="text-lg font-light text-gray-400">: 신뢰와 가성비의 회복</span></h3>
-                        <p class="text-gray-400 mb-8 leading-relaxed text-right md:text-left">
-                            "돈이 아깝지 않은 도시"라는 강점을 브랜딩합니다. 바가지 요금 논란이 있는 전통시장 상권을 지자체가 직접 관리하고, 투명한 가격 정책을 약속한 상점들만 선별하여 글로벌 패스를 발행합니다.
-                        </p>
-                        <ul class="space-y-4 text-right md:text-left">
-                            <li class="flex items-center gap-3 justify-end md:justify-start">
-                                <span class="text-gray-300 order-1 md:order-2"><b>신뢰 보증:</b> 바가지 요금 적발 시 100% 환불 보상제 운영</span>
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full order-2 md:order-1"></span>
-                            </li>
-                            <li class="flex items-center gap-3 justify-end md:justify-start">
-                                <span class="text-gray-300 order-1 md:order-2"><b>미식 큐레이션:</b> 현지인만 아는 '진짜 노포' 50선 다국어 가이드</span>
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full order-2 md:order-1"></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Strategy 03 -->
-            <div>
-                <div class="grid md:grid-cols-2 gap-16 items-center">
-                    <div class="order-2 md:order-1">
-                        <span class="text-blue-500 font-bold text-5xl mb-4 block opacity-20">03</span>
-                        <h3 class="text-3xl font-bold text-white mb-6">오션 노마드 (Ocean Nomad)<br><span class="text-lg font-light text-gray-400">: 청년 유출을 막는 '일자리'의 재해석</span></h3>
-                        <p class="text-gray-400 mb-8 leading-relaxed">
-                            부산을 단순히 놀고 가는 곳이 아닌, 일하고 싶은 곳으로 만듭니다. 해변가 유휴 건물을 글로벌 워케이션 센터로 개조하여 전 세계 디지털 노마드를 불러모으고, 지역 청년들과의 네트워킹을 지원합니다.
-                        </p>
-                        <ul class="space-y-4">
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                <span class="text-gray-300"><b>인프라 구축:</b> 광안리/송정 해변 중심 '블루 오피스' 24시간 개방</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                                <span class="text-gray-300"><b>정주 지원:</b> 워케이션 참여자 대상 지역 청년 매칭 멘토링 프로그램</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="order-1 md:order-2 glass-card aspect-video rounded-3xl overflow-hidden bg-gradient-to-tr from-teal-900/30 to-black p-1 flex items-center justify-center">
-                        <div class="text-center p-8">
-                            <div class="text-6xl mb-4">🌊</div>
-                            <p class="text-xs text-blue-400 font-mono">[Image: 바다를 마주한 스마트 워크 스테이션]</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Impact & Conclusion -->
-    <section id="impact" class="py-32 px-6">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-black text-white mb-16 underline decoration-blue-600 underline-offset-8">기대되는 지표적 변화</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div>
-                    <div class="text-5xl font-black text-blue-500 mb-2">1.5<span class="text-xl">배</span></div>
-                    <p class="text-gray-400 text-sm">관광객 평균 체류일 수 증대</p>
-                </div>
-                <div>
-                    <div class="text-5xl font-black text-blue-500 mb-2">2,000<span class="text-xl">개</span></div>
-                    <p class="text-gray-400 text-sm">로컬 청년 직간접 일자리 창출</p>
-                </div>
-                <div>
-                    <div class="text-5xl font-black text-blue-500 mb-2">95<span class="text-xl">%</span></div>
-                    <p class="text-gray-400 text-sm">미식 관광 가격 만족도 목표</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Download CTA Section -->
-    <section class="py-20 bg-[#0a0a0c] text-center border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <a href="content.pdf" download="busan_proposal.pdf" class="inline-flex items-center gap-3 bg-white/5 hover:bg-blue-600 text-white px-12 py-5 rounded-2xl font-black transition-all border border-white/10 hover:border-blue-500 shadow-2xl group">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-y-1 transition-transform"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                상세 기획서 다운로드 (PDF)
+        <h1 class="text-6xl md:text-9xl font-bold tracking-tighter mb-8 leading-none">
+            AI Literacy:<br>
+            <span class="font-extralight italic text-accent">Data & Story</span>
+        </h1>
+        <p class="text-lg md:text-xl font-light opacity-60 max-w-3xl leading-relaxed">
+            현실의 문제를 데이터로 읽어내고, 생성형 AI의 지능을 빌려<br class="hidden md:block">
+            세상을 변화시키는 <span class="text-[var(--accent-color)] font-bold">의미 있는 가치</span>를 제안합니다.
+        </p>
+        <div class="mt-12">
+            <a href="#gallery" class="px-12 py-5 bg-[var(--accent-color)] text-white rounded-full font-bold hover:bg-[var(--accent-light)] transition-all wine-glow uppercase tracking-[0.2em] text-sm">
+                Explore Work
             </a>
-            <p class="mt-4 text-gray-500 text-sm">프로젝트의 모든 세부 Action Plan이 담긴 공식 문서를 확인하세요.</p>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-20 border-t border-white/5 px-6">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div class="text-center md:text-left">
-                <div class="text-2xl font-black text-white mb-2">RE<span class="text-blue-500">:</span>BUSAN</div>
-                <p class="text-gray-500 text-sm">우리는 더 이상 아파트 높이로 도시를 정의하지 않습니다.</p>
+    <section id="gallery" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 reveal">
+                <h2 class="text-5xl font-bold tracking-tighter">Portfolio Gallery</h2>
             </div>
-            <div class="flex gap-6 text-gray-500 text-xs">
-                <a href="#" class="hover:text-white transition-colors">데이터 리포트 다운로드</a>
-                <a href="#" class="hover:text-white transition-colors">기획단 참여 신청</a>
-            </div>
+            <div class="bento-grid" id="projectGrid"></div>
         </div>
-    </footer>
+    </section>
+
+    <section id="about" class="py-32 px-6 bg-[var(--section-bg)]">
+        <div class="max-w-4xl mx-auto reveal text-center">
+            <div class="profile-wrapper mb-8">
+                <img src="image_e4b682.png" alt="Profile" class="profile-image">
+            </div>
+            <h2 class="text-4xl font-bold mb-4">유 가 원</h2>
+            <p class="opacity-60 font-light leading-relaxed text-lg">부산대학교 사회복지학과 22학번</p>
+        </div>
+    </section>
+
+    <div id="modal" class="fixed inset-0 z-50 modal-blur hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg-color)] border border-[var(--accent-color)]/20 w-full max-w-3xl rounded-[2.5rem] overflow-hidden shadow-[0_0_100px_rgba(196,30,58,0.1)] relative">
+            <button onclick="closeModal()" class="absolute top-8 right-8 text-3xl opacity-30 hover:text-[var(--accent-color)]">&times;</button>
+            <div id="modalContent" class="p-10 md:p-16"></div>
+        </div>
+    </div>
 
     <script>
-        // 스크롤 애니메이션 옵저버
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            themeIcon.classList.toggle('fa-moon');
+            themeIcon.classList.toggle('fa-sun');
+        });
+
+        const assignments = [
+            { id: 1, title: "AI의 이해", tools: ["NotebookLM", "Gemini"], desc: "노트북LM을 활용하여 AI의 정의, 역사 및 생성형 AI의 핵심 개념을 체계적으로 정리합니다.", detail: "구글의 NotebookLM을 활용하여 방대한 AI 관련 문헌 자료를 업로드하고 흐름을 분석했습니다.", link: "./02/index.html" },
+            { id: 2, title: "데이터 스토리텔링", tools: ["Gemini 스토리북"], desc: "공공데이터를 분석하고 인사이트를 도출하여 시각적으로 설득력 있는 리포트를 작성하여 스토리북으로 만들기", detail: "실제 사회 지표들을 분석하고 스토리북 형태의 디지털 리포트로 가공했습니다.", link: "./03/index.html" },
+            { id: 3, title: "웹기술의 이해", tools: ["HTTP/3", "Client-Server"], desc: "현대 웹의 건축학적 구조와 프론트엔드/백엔드 메커니즘을 심층적으로 분석합니다.", detail: "웹의 기본 구조부터 최신 전송 프로토콜까지 웹 기술의 전반적인 흐름을 학습했습니다.", link: "./04/index.html" },
+            { id: 4, title: "데이터분석(고령운전자)", tools: ["Matplotlib", "Seaborn"], desc: "코랩으로 데이터 분석", detail: "국내 고령 운전자 사고 데이터를 시각화하여 특정 연령층에서의 경향성을 분석하고 해결책을 모색했습니다.", link: "./05/index.html" },
+            { id: 5, title: "유튜브 댓글분석", tools: ["Midjourney", "DALL-E 3"], desc: "추상적 개념을 시각적 콘텐츠로 변환하는 생성 능력을 키웁니다.", detail: "텍스트 가이드만으로 정교한 브랜드 아이덴티티 포스터를 제작했습니다.", link: "./06/index.html" },
+            { id: 6, title: "인사이트 스토리텔링", tools: ["Canva", "ChatGPT"], desc: "분석된 데이터를 토대로 설득력 있는 서사를 구축합니다.", detail: "데이터 경향성을 7단계 서사 구조로 변환하여 카드뉴스 형식의 보고서를 제작했습니다." },
+            { id: 7, title: "AI 기반 동영상 기획", tools: ["Runway", "Luma"], desc: "텍스트와 이미지를 움직임이 있는 스토리로 확장합니다.", detail: "캠페인 영상을 위한 스토리보드부터 최종 렌더링까지 완성했습니다." },
+            { id: 8, title: "맞춤형 AI 솔루션 설계", tools: ["AI Tools"], desc: "특정 집단의 불편함을 해소하는 AI 서비스 모델을 기획합니다.", detail: "노인 디지털 소외 문제를 해결하기 위한 보이스봇 인터페이스를 설계했습니다." },
+            { id: 9, title: "데이터 대시보드 구축", tools: ["Tableau", "Excel"], desc: "실시간으로 변화하는 데이터를 한눈에 파악하는 시스템을 만듭니다.", detail: "복지 시설 현황을 지도로 시각화하여 분석할 수 있는 대시보드를 제작했습니다." },
+            { id: 10, title: "캡스톤: 나의 AI 비전", tools: ["Full Stack"], desc: "한 학기 동안 축적된 역량을 하나의 통합 포트폴리오로 승화시킵니다.", detail: "인간을 위한 AI 리터러시의 정의와 향후 로드맵을 제시했습니다." }
+        ];
+
+        const grid = document.getElementById('projectGrid');
+
+        assignments.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = "glass-card p-10 rounded-[2rem] cursor-pointer reveal group relative";
+            card.onclick = (e) => {
+                const arrowBtn = e.target.closest('.arrow-link');
+                if (arrowBtn && item.link) {
+                    e.stopPropagation();
+                    window.location.href = item.link;
+                    return;
                 }
-            });
+                openModal(item);
+            };
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-8">
+                    <span class="text-xs font-mono text-[var(--accent-color)] font-bold opacity-60 uppercase tracking-widest">Assignment ${String(item.id).padStart(2, '0')}</span>
+                    <div class="arrow-link w-10 h-10 rounded-full border border-[var(--accent-color)]/20 flex items-center justify-center group-hover:bg-[var(--accent-color)] group-hover:border-[var(--accent-color)] transition-all transform group-hover:rotate-45">
+                        <i class="fas fa-arrow-right text-[10px] group-hover:text-white transition-all"></i>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 group-hover:text-[var(--accent-color)] transition-colors tracking-tight">${item.title}</h3>
+                <p class="text-sm opacity-50 font-light mb-8 line-clamp-2 leading-relaxed">${item.desc}</p>
+                <div class="flex flex-wrap gap-2">
+                    ${item.tools.map(tool => `<span class="px-3 py-1 bg-[var(--accent-color)]/5 rounded-full text-[10px] font-bold text-[var(--accent-color)] border border-[var(--accent-color)]/10">${tool}</span>`).join('')}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
 
-        document.querySelectorAll('.glass-card, .stat-item').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        function openModal(item) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            content.innerHTML = `
+                <h2 class="text-4xl font-bold mb-8 tracking-tighter leading-tight">${item.title}</h2>
+                <div class="flex flex-wrap gap-3 mb-10">
+                    ${item.tools.map(tool => `<span class="px-5 py-2 bg-[var(--accent-color)] text-white rounded-full text-xs font-bold">${tool}</span>`).join('')}
+                </div>
+                <div class="bg-[var(--accent-color)]/5 p-8 rounded-[2rem] border border-[var(--accent-color)]/20">
+                    <p class="text-base md:text-lg opacity-90 leading-relaxed font-light">${item.detail}</p>
+                </div>
+                <div class="mt-12 pt-10 border-t border-[var(--card-border)] flex gap-4">
+                    ${item.link ? `<a href="${item.link}" class="flex-1 text-center text-sm font-bold uppercase tracking-widest bg-[var(--accent-color)] text-white px-10 py-4 rounded-full shadow-lg shadow-[var(--accent-color)]/20 hover:scale-[1.02] transition-transform">결과물보기</a>` : ''}
+                    <button onclick="closeModal()" class="flex-1 text-sm font-bold uppercase tracking-widest border border-[var(--card-border)] px-8 py-4 rounded-full hover:bg-[var(--text-color)] hover:text-[var(--bg-color)] transition-colors">닫기</button>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
     </script>
 </body>
 </html>

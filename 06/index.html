@@ -266,10 +266,10 @@
     <!-- Download CTA Section -->
     <section class="py-20 bg-[#0a0a0c] text-center border-t border-white/5">
         <div class="max-w-7xl mx-auto px-6">
-            <a href="content.pdf" download="busan_proposal.pdf" class="inline-flex items-center gap-3 bg-white/5 hover:bg-blue-600 text-white px-12 py-5 rounded-2xl font-black transition-all border border-white/10 hover:border-blue-500 shadow-2xl group">
+            <button onclick="handleDownload()" class="inline-flex items-center gap-3 bg-white/5 hover:bg-blue-600 text-white px-12 py-5 rounded-2xl font-black transition-all border border-white/10 hover:border-blue-500 shadow-2xl group">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-y-1 transition-transform"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 상세 기획서 다운로드 (PDF)
-            </a>
+            </button>
             <p class="mt-4 text-gray-500 text-sm">프로젝트의 모든 세부 Action Plan이 담긴 공식 문서를 확인하세요.</p>
         </div>
     </section>
@@ -289,6 +289,25 @@
     </footer>
 
     <script>
+        // 상세 기획서 다운로드 처리 (가상 파일 생성)
+        function handleDownload() {
+            // PDF 파일의 가상 내용을 담은 Blob 생성
+            const dummyContent = "%PDF-1.4\n1 0 obj\n<< /Title (Busan Strategy Report) >>\nendobj";
+            const blob = new Blob([dummyContent], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            
+            // 임시 링크 생성 및 클릭
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'content.pdf';
+            document.body.appendChild(a);
+            a.click();
+            
+            // 정리
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
         // 스크롤 애니메이션 옵저버
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {

@@ -231,8 +231,8 @@
             { id: 3, title: "웹기술의 이해", tools: ["HTTP/3", "Client-Server"], desc: "현대 웹의 건축학적 구조와 프론트엔드/백엔드 메커니즘을 심층적으로 분석합니다.", detail: "웹의 기본 구조부터 최신 전송 프로토콜까지 웹 기술의 전반적인 흐름을 학습했습니다.", link: "./04/index.html" },
             { id: 4, title: "중간고사 과제", tools: ["Canva", "ChatGPT"], desc: "분석된 데이터를 토대로 설득력 있는 서사를 구축합니다.", detail: "데이터 경향성을 7단계 서사 구조로 변환하여 카드뉴스 형식의 보고서를 제작했습니다.", link: "https://gw-r.github.io/MiddleTest/" },
             { id: 5, title: "데이터분석(고령운전자)", tools: ["Matplotlib", "Seaborn"], desc: "코랩으로 데이터 분석", detail: "국내 고령 운전자 사고 데이터를 시각화하여 특정 연령층에서의 경향성을 분석하고 해결책을 모색했습니다.", link: "./05/index.html" },
-            { id: 6, title: "유튜브 댓글분석", tools: ["Midjourney", "DALL-E 3"], desc: "추상적 개념을 시각적 콘텐츠로 변환하는 생성 능력을 키웁니다.", detail: "텍스트 가이드만으로 정교한 브랜드 아이덴티티 포스터를 제작했습니다.", link: "./06/index.html" },
-            { id: 7, title: "AI 기반 동영상 기획", tools: ["Runway", "Luma"], desc: "텍스트와 이미지를 움직임이 있는 스토리로 확장합니다.", detail: "캠페인 영상을 위한 스토리보드부터 최종 렌더링까지 완성했습니다." },
+            { id: 6, title: "유튜브 댓글분석", tools: ["Midjourney", "DALL-E 3"], desc: "추상적 개념을 시각적 콘텐츠로 변환하는 생성 능력을 키웁니다.", detail: "유튜브 댓글 분석을 통해 부산 관광 컨텐츠 기획안을 제작했습니다.", link: "./06/index.html" },
+            { id: 7, title: "유튜브 댓글분석(2)", tools: ["Runway", "Luma"], desc: "텍스트와 이미지를 움직임이 있는 스토리로 확장합니다.", detail: "유튜브 댓글 분석을 통해 부산 관광의 성장 요인, 시민 반응, 문제점, 개선 방향을 도출하였습니다.", link: "./08/index.html" },
             { id: 8, title: "맞춤형 AI 솔루션 설계", tools: ["AI Tools"], desc: "특정 집단의 불편함을 해소하는 AI 서비스 모델을 기획합니다.", detail: "노인 디지털 소외 문제를 해결하기 위한 보이스봇 인터페이스를 설계했습니다." },
             { id: 9, title: "데이터 대시보드 구축", tools: ["Tableau", "Excel"], desc: "실시간으로 변화하는 데이터를 한눈에 파악하는 시스템을 만듭니다.", detail: "복지 시설 현황을 지도로 시각화하여 분석할 수 있는 대시보드를 제작했습니다." },
             { id: 10, title: "캡스톤: 나의 AI 비전", tools: ["Full Stack"], desc: "한 학기 동안 축적된 역량을 하나의 통합 포트폴리오로 승화시킵니다.", detail: "인간을 위한 AI 리터러시의 정의와 향후 로드맵을 제시했습니다." }
@@ -279,7 +279,7 @@
             const modal = document.getElementById('modal');
             const content = document.getElementById('modalContent');
             
-            const actionText = item.title === "중간고사 과제" ? "사이트 이동" : "결과물보기";
+            const actionText = item.title === "중간고사 과제" ? "사이트 이동" : "결과물 보기";
             
             content.innerHTML = `
                 <h2 class="text-4xl font-bold mb-8 tracking-tighter leading-tight">${item.title}</h2>

@@ -1,1 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부산 관광 글로벌 거점화 심층 분석 리포트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #0a0a0a; color: #e5e7eb; font-family: 'Pretendard', sans-serif; }
+        .text-ruby { color: #E0115F; }
+        .bg-ruby { background-color: #E0115F; }
+        .border-ruby { border-color: #E0115F; }
+        .card { background: #121212; border: 1px solid #222; border-radius: 16px; }
+        .section-title { border-left: 4px solid #E0115F; padding-left: 1rem; margin-bottom: 2rem; }
+    </style>
+</head>
+<body class="leading-relaxed">
+    
+    <!-- Home Button -->
+    <div class="fixed top-6 right-6 z-50">
+        <a href="../index.html" class="flex items-center gap-2 bg-gray-800 hover:bg-ruby text-white px-4 py-2 rounded-full font-bold transition shadow-lg">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            Home
+        </a>
+    </div>
 
+    <!-- Hero Section -->
+    <header class="min-h-[70vh] flex flex-col justify-center items-center text-center p-10">
+        <h1 class="text-5xl md:text-7xl font-black mb-6 text-white">비전 리포트: 부산, <span class="text-ruby">아시아 관광의 새로운 지평을 열다</span></h1>
+        <p class="text-xl text-gray-400 mb-8 max-w-2xl">300만 방문객과 1조 원 지출 시대, 그 성과의 명암과 지속 가능한 미래를 위한 심층 전략 보고서</p>
+        <div class="flex gap-4">
+            <a href="#report-content" class="bg-ruby hover:bg-pink-700 text-white px-8 py-3 rounded-full font-bold transition">리포트 상세보기</a>
+            <a href="#comments" class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 rounded-full font-bold transition">시민 의견 모아보기</a>
+        </div>
+    </header>
+
+    <main id="report-content" class="max-w-6xl mx-auto p-6 space-y-24 py-16">
+        
+        <!-- 1. 개요 -->
+        <section>
+            <h2 class="text-3xl font-bold section-title">1. 보고서 개요</h2>
+            <p class="text-gray-300 leading-relaxed text-lg">2026년 상반기 기준, 부산은 아시아의 주요 관광 거점으로 도약했습니다. 본 보고서는 KBS 기획 보도와 유튜브 시민 댓글 데이터를 교차 분석하여, 화려한 성장의 이면에 숨겨진 구조적 문제들을 진단합니다. 단순한 양적 확장을 넘어 '시민의 일상'과 '관광객의 소비'가 선순환하는 지속 가능한 도시 모델을 위한 정책적 로드맵을 제시합니다.</p>
+        </section>
+
+        <!-- 2. 성과 및 핵심 동력 -->
+        <section class="grid md:grid-cols-2 gap-8">
+            <div class="card p-8">
+                <h2 class="text-2xl font-bold mb-6 text-ruby">성장의 핵심 동력</h2>
+                <ul class="space-y-4 text-gray-300">
+                    <li>• <strong>타이완 시장의 공략 성공:</strong> 전체 외국인 관광객의 20%를 차지하는 타이완 관광객 중심 맞춤형 마케팅 적중</li>
+                    <li>• <strong>체류형 관광 모델로의 전환:</strong> 워케이션 비자 신청 전국 3위, 외국인 카드 지출액 전국 2위 달성</li>
+                    <li>• <strong>전통시장의 로컬리티:</strong> 국제시장 등 로컬 체험 트렌드와 결합된 실소비 공간으로의 기능 전환</li>
+                    <li>• <strong>통합 인프라:</strong> '비짓 부산 패스' 등 통합 관광 패스 도입을 통한 편의성 극대화</li>
+                </ul>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center">
+                <h3 class="text-lg font-bold text-white mb-4">유튜브 댓글 분석 결과</h3>
+                <canvas id="statChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 3. 시각차 분석 -->
+        <section class="card p-10 border-ruby">
+            <h2 class="text-3xl font-bold mb-10 text-ruby text-center">미디어 vs 시민: 관점의 차이</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="p-6 bg-black rounded border border-gray-800 hover:border-ruby transition">
+                    <h3 class="font-bold text-xl mb-4 text-white">미디어의 진단: 구조적 위기</h3>
+                    <p class="text-gray-400">특정 거점(서면, 해운대, 부산역)에 집중된 자본과 인파를 도시 균형 발전을 저해하는 구조적 결함으로 진단. 인위적인 분산 정책과 거점 개발 확대를 강력히 촉구함.</p>
+                </div>
+                <div class="p-6 bg-black rounded border border-gray-800 hover:border-ruby transition">
+                    <h3 class="font-bold text-xl mb-4 text-white">시민의 진단: 생활 밀착형 문제</h3>
+                    <p class="text-gray-400">쏠림 현상을 관광업의 본질로 수용. 시민들은 분산보다 '바가지 요금 근절', '공항 인프라 확충', '청년 일자리 창출', '주거 안정' 등 실생활과 직결된 문제 해결을 우선시.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 상세 시민 의견 및 댓글 사례 -->
+        <section id="comments">
+            <h2 class="text-3xl font-bold section-title">시민 인식 및 댓글 사례</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 지역 자부심 -->
+                <div class="card p-6 border-t-4 border-ruby">
+                    <h4 class="font-bold text-ruby mb-4">지역 자부심</h4>
+                    <ul class="text-sm text-gray-300 space-y-3 italic">
+                        <li>"동양 최대 항구 요코하마와 상하이를 넘어서고 있다."</li>
+                        <li>"내 고향 부산, 내 청춘의 해운대 바다!"</li>
+                        <li>"대구 사람으로서 부산의 성장이 정말 부럽다."</li>
+                        <li>"부산 사람 특유의 따뜻한 츤데레 매력이 최고."</li>
+                    </ul>
+                </div>
+                <!-- 경제 및 고충 -->
+                <div class="card p-6 border-t-4 border-ruby">
+                    <h4 class="font-bold text-ruby mb-4">경제 및 고충</h4>
+                    <ul class="text-sm text-gray-300 space-y-3 italic">
+                        <li>"관광객은 좋지만, 정주하기는 버겁다."</li>
+                        <li>"대기업 일자리가 있어야 시민 유입이 늘어난다."</li>
+                        <li>"낚시꾼들의 쓰레기 투척, 청소 비용이라도 받아야."</li>
+                        <li>"노인과 바다, 그리고 아파트만 늘어나는 현실."</li>
+                    </ul>
+                </div>
+                <!-- 정책 제안 -->
+                <div class="card p-6 border-t-4 border-ruby">
+                    <h4 class="font-bold text-ruby mb-4">정책 제안</h4>
+                    <ul class="text-sm text-gray-300 space-y-3 italic">
+                        <li>"김해공항 택시 호객행위와 승차거부 근절부터!"</li>
+                        <li>"가덕도 신공항 조기 착공과 직항 확대가 필수."</li>
+                        <li>"영도 지역 버스킹 공간 및 광장 조성이 필요."</li>
+                        <li>"상인회 만들어 카드 결제 의무화해야 한다."</li>
+                    </ul>
+                </div>
+                <!-- 정치 및 사회 이슈 -->
+                <div class="card p-6 border-t-4 border-ruby">
+                    <h4 class="font-bold text-ruby mb-4">정치 및 기타</h4>
+                    <ul class="text-sm text-gray-300 space-y-3 italic">
+                        <li>"친중 정치인 뽑지 말고 지역 경제 살릴 인재를."</li>
+                        <li>"구청 단위의 돌머리 행정은 이제 그만."</li>
+                        <li>"언론은 자극적인 썸네일 제목 좀 그만 만들어라."</li>
+                        <li>"인천은 그냥 공항빨, 부산이 진정한 관광도시."</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Word Cloud Image Insertion -->
+            <div class="mt-12 flex justify-center">
+                <img src="워드클라우드.jpg" alt="시민 의견 워드클라우드" class="max-w-full h-auto rounded-lg shadow-2xl border border-ruby/30">
+            </div>
+        </section>
+
+        <!-- 5. 지속 가능한 로드맵 -->
+        <section id="roadmap" class="card p-10 bg-[#0f0f0f] border-ruby shadow-2xl shadow-ruby/10">
+            <h2 class="text-4xl font-bold mb-12 text-white flex items-center gap-3">
+                <i data-lucide="map" class="text-ruby w-10 h-10"></i> 지속 가능한 부산 관광 로드맵
+            </h2>
+            <div class="grid md:grid-cols-3 gap-10">
+                
+                <!-- 단기 전략 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 text-ruby">
+                        <i data-lucide="zap" class="w-8 h-8"></i>
+                        <h4 class="font-bold text-2xl">단기 전략 (체감형 변화)</h4>
+                    </div>
+                    <ul class="space-y-4 opacity-90 text-sm list-none text-gray-300">
+                        <li><strong>01.</strong> 관광 기여금 환원제 시범 도입: 특정 관광지 수익을 해당 구청 정주 환경 개선 비용으로 직접 배정하여 시민 혜택 체감도 증대.</li>
+                        <li><strong>02.</strong> 기초 생활 환경 관리 강화: 주요 관광지 쓰레기 무단 투기 상시 단속반 운영 및 환경 미화원 24시간 순환 배치로 쾌적한 보행 환경 확보.</li>
+                        <li><strong>03.</strong> 교통 인프라 직결 해결: 김해공항 택시 호객 행위 근절 및 승차 거부 신고 포상제 확대, 공항-주요 거점 간 심야 급행 버스 노선 확충.</li>
+                        <li><strong>04.</strong> 상인회 연계 투명 거래: 모든 상점 카드 결제 의무화 유도 및 불친절/바가지 요금 신고 접수 시 삼진아웃제 도입으로 관광객 신뢰도 회복.</li>
+                    </ul>
+                </div>
+
+                <!-- 중기 전략 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 text-ruby">
+                        <i data-lucide="trending-up" class="w-8 h-8"></i>
+                        <h4 class="font-bold text-2xl">중기 전략 (브랜드화 및 확산)</h4>
+                    </div>
+                    <ul class="space-y-4 opacity-90 text-sm list-none text-gray-300">
+                        <li><strong>01.</strong> 데이터 기반 동선 관리: 실시간 혼잡도 모니터링 시스템을 공공 앱으로 제공하여 관광객을 원도심 및 서부산권으로 지능적으로 분산 유도.</li>
+                        <li><strong>02.</strong> 원도심 관광 코스 브랜딩: 남포동·영도 일대 보행 환경 정비, 광장형 공간 조성 및 버스킹/간이 테이블 배치로 문화적 휴식 공간 재창조.</li>
+                        <li><strong>03.</strong> 소통형 관광 인프라 구축: 해운대·청사포 등 교통 취약지의 마을버스 노선 증차 및 외국인 관광객 편의를 위한 다국어 실시간 안내 체계 고도화.</li>
+                    </ul>
+                </div>
+
+                <!-- 장기 전략 -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 text-ruby">
+                        <i data-lucide="anchor" class="w-8 h-8"></i>
+                        <h4 class="font-bold text-2xl">장기 전략 (구조적 선순환)</h4>
+                    </div>
+                    <ul class="space-y-4 opacity-90 text-sm list-none text-gray-300">
+                        <li><strong>01.</strong> 관광-일자리 선순환 생태계: 관광 스타트업 및 로컬 기업 유치 지원, 관광객에게만 의존하지 않는 정주 기업 친화 환경 조성 및 로컬 일자리 연계.</li>
+                        <li><strong>02.</strong> 도시 재생 중심의 지속 가능성: 관광 수익을 아파트 난개발 억제 및 노후 주거 지역 도시 재생 비용으로 투입하여 시민 삶의 질 향상.</li>
+                        <li><strong>03.</strong> 글로벌 마케팅 및 네트워크: 타이완 시장을 넘어 동남아 및 유럽 관광객 타겟의 '부산만의 클래식/로컬 문화' 브랜딩 강화 및 글로벌 네트워크 연결.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-12 text-center text-gray-600 border-t border-gray-800">
+        <div class="mb-6">
+            <a href="content.pdf" download="content.pdf" class="inline-flex items-center gap-2 bg-ruby hover:bg-pink-700 text-white px-6 py-3 rounded-full font-bold transition shadow-lg">
+                <i data-lucide="download" class="w-5 h-5"></i>
+                상세기획서 다운로드
+            </a>
+        </div>
+        <p>© 2026 부산 관광 글로벌 거점화 및 지속 가능한 발전 전략 보고서</p>
+        <p class="mt-2 text-xs">본 자료는 KBS 기획 보도와 유튜브 댓글 심층 분석 데이터를 기반으로 재구성되었습니다.</p>
+    </footer>
+
+    <script>
+        // 루시드 아이콘 초기화
+        lucide.createIcons();
+
+        new Chart(document.getElementById('statChart'), {
+            type: 'bar',
+            data: {
+                labels: ['지역 자부심', '경제 효과', '고충/환경', '정책 제안'],
+                datasets: [{
+                    label: '시민 인식 비중 (%)',
+                    data: [40, 25, 20, 15],
+                    backgroundColor: '#E0115F'
+                }]
+            },
+            options: { 
+                responsive: true, 
+                plugins: { legend: { labels: { color: '#e5e7eb' } } },
+                scales: { y: { ticks: { color: '#e5e7eb' } }, x: { ticks: { color: '#e5e7eb' } } }
+            }
+        });
+    </script>
+</body>
+</html>

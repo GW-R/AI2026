@@ -1,0 +1,214 @@
+{
+    "overall": {
+        "pearson_r": -0.04766220935625204,
+        "pearson_p": 0.664895699333425,
+        "spearman_r": -0.020983805594554775,
+        "spearman_p": 0.8488251716747778,
+        "sample_size": 85
+    },
+    "yearly_national": [
+        {
+            "year": 2020,
+            "satisfaction_index": 3.423,
+            "suicide_rate": 25.7
+        },
+        {
+            "year": 2021,
+            "satisfaction_index": 3.161,
+            "suicide_rate": 26.0
+        },
+        {
+            "year": 2022,
+            "satisfaction_index": 3.388,
+            "suicide_rate": 25.2
+        },
+        {
+            "year": 2023,
+            "satisfaction_index": 3.3659999999999997,
+            "suicide_rate": 27.3
+        },
+        {
+            "year": 2024,
+            "satisfaction_index": 3.367,
+            "suicide_rate": 29.1
+        }
+    ],
+    "gender": {
+        "male": {
+            "pearson_r": -0.03125221793908368,
+            "pearson_p": 0.7764606595740599,
+            "mean_satisfaction": 3.3732588235294108,
+            "mean_suicide": 39.607058823529414
+        },
+        "female": {
+            "pearson_r": 0.014105971599430247,
+            "pearson_p": 0.8980449818585785,
+            "mean_satisfaction": 3.3582823529411767,
+            "mean_suicide": 16.46117647058823
+        }
+    },
+    "regional_rankings": {
+        "top_satisfaction": [
+            {
+                "region": "세종특별자치시",
+                "satisfaction_index": 3.524
+            },
+            {
+                "region": "충청남도",
+                "satisfaction_index": 3.4444000000000004
+            },
+            {
+                "region": "대전광역시",
+                "satisfaction_index": 3.4354
+            },
+            {
+                "region": "제주특별자치도",
+                "satisfaction_index": 3.4306000000000005
+            },
+            {
+                "region": "강원특별자치도",
+                "satisfaction_index": 3.4096
+            },
+            {
+                "region": "광주광역시",
+                "satisfaction_index": 3.3942
+            },
+            {
+                "region": "전라남도",
+                "satisfaction_index": 3.376
+            },
+            {
+                "region": "전북특별자치도",
+                "satisfaction_index": 3.3652
+            },
+            {
+                "region": "충청북도",
+                "satisfaction_index": 3.3592
+            },
+            {
+                "region": "경상남도",
+                "satisfaction_index": 3.3582
+            },
+            {
+                "region": "서울특별시",
+                "satisfaction_index": 3.3548
+            },
+            {
+                "region": "울산광역시",
+                "satisfaction_index": 3.3369999999999997
+            },
+            {
+                "region": "경기도",
+                "satisfaction_index": 3.3198
+            },
+            {
+                "region": "부산광역시",
+                "satisfaction_index": 3.2888000000000006
+            },
+            {
+                "region": "인천광역시",
+                "satisfaction_index": 3.2868000000000004
+            },
+            {
+                "region": "경상북도",
+                "satisfaction_index": 3.2784
+            },
+            {
+                "region": "대구광역시",
+                "satisfaction_index": 3.2504
+            }
+        ],
+        "top_suicide": [
+            {
+                "region": "충청남도",
+                "suicide_rate": 34.28
+            },
+            {
+                "region": "강원특별자치도",
+                "suicide_rate": 33.6
+            },
+            {
+                "region": "충청북도",
+                "suicide_rate": 30.6
+            },
+            {
+                "region": "전라남도",
+                "suicide_rate": 29.8
+            },
+            {
+                "region": "제주특별자치도",
+                "suicide_rate": 29.78
+            },
+            {
+                "region": "경상북도",
+                "suicide_rate": 29.3
+            },
+            {
+                "region": "울산광역시",
+                "suicide_rate": 28.619999999999997
+            },
+            {
+                "region": "부산광역시",
+                "suicide_rate": 28.360000000000003
+            },
+            {
+                "region": "전북특별자치도",
+                "suicide_rate": 28.060000000000002
+            },
+            {
+                "region": "대전광역시",
+                "suicide_rate": 27.96
+            },
+            {
+                "region": "인천광역시",
+                "suicide_rate": 27.639999999999997
+            },
+            {
+                "region": "대구광역시",
+                "suicide_rate": 27.380000000000003
+            },
+            {
+                "region": "경상남도",
+                "suicide_rate": 27.060000000000002
+            },
+            {
+                "region": "광주광역시",
+                "suicide_rate": 26.24
+            },
+            {
+                "region": "경기도",
+                "suicide_rate": 24.740000000000002
+            },
+            {
+                "region": "서울특별시",
+                "suicide_rate": 22.8
+            },
+            {
+                "region": "세종특별자치시",
+                "suicide_rate": 20.740000000000002
+            }
+        ]
+    },
+    "yearly_correlations": {
+        "2020": {
+            "pearson_r": -0.5135384548585732,
+            "pearson_p": 0.03499015293427172
+        },
+        "2021": {
+            "pearson_r": 0.049850198214697106,
+            "pearson_p": 0.8493099367119323
+        },
+        "2022": {
+            "pearson_r": 0.07711425981468867,
+            "pearson_p": 0.7686280047694021
+        },
+        "2023": {
+            "pearson_r": -0.10873688887038742,
+            "pearson_p": 0.6778346518050645
+        },
+        "2024": {
+            "pearson_r": 0.2296166098709438,
+            "pearson_p": 0.37532036132741703
+        }
+    }
+}

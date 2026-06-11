@@ -1,1 +1,1356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삶의 만족도와 자살률 간의 상관관계 분석 보고서 (2020~2024)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS variables for variables styling */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #f43f5e;
+            --accent-green: #34d399;
+            --accent-yellow: #fbbf24;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --accent-primary: #0284c7;
+            --accent-secondary: #e11d48;
+            --accent-green: #059669;
+            --accent-yellow: #d97706;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Base resets */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* Layout structure */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        [data-theme="light"] header {
+            background-color: rgba(248, 250, 252, 0.8);
+        }
+
+        .header-logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        /* Toggle switches */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            background: var(--border-color);
+            padding: 3px;
+            border-radius: 99px;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 1;
+            transition: var(--transition);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .toggle-btn.active {
+            color: #ffffff;
+            background: var(--accent-primary);
+            box-shadow: 0 2px 10px rgba(56, 189, 248, 0.3);
+        }
+
+        [data-theme="light"] .toggle-btn.active {
+            color: #ffffff;
+            background: var(--accent-primary);
+        }
+
+        .theme-switch {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .theme-switch:hover {
+            color: var(--accent-primary);
+            transform: rotate(15deg);
+        }
+
+        .pdf-download-btn {
+            background: linear-gradient(135deg, var(--accent-primary), #0284c7);
+            color: #ffffff;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .pdf-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+        }
+
+        .home-btn {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .home-btn:hover {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 5rem 1.5rem;
+            transition: var(--transition);
+        }
+
+        /* Mode modes display control */
+        .mode-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .mode-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Report view layout */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 5rem;
+            height: fit-content;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item a {
+            display: block;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item.active a, .nav-item a:hover {
+            color: var(--accent-primary);
+            background-color: var(--card-bg);
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        /* Card elements */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.2);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .doc-title {
+            font-size: 2.2rem;
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            border-left: 4px solid var(--accent-primary);
+            padding-left: 0.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--accent-primary);
+            margin: 1.5rem 0 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-align: justify;
+        }
+
+        /* Key statistics layout */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-box {
+            background-color: rgba(15, 23, 42, 0.3);
+            border: 1px solid var(--border-color);
+            padding: 1.2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Table styles */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.8rem 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: rgba(51, 65, 85, 0.2);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Interactive data explorer */
+        .explorer-card {
+            background: linear-gradient(135deg, var(--card-bg), rgba(15, 23, 42, 0.4));
+            border-left: 6px solid var(--accent-primary);
+        }
+
+        .selector-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .custom-select {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            transition: var(--transition);
+            min-width: 200px;
+        }
+
+        .custom-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        }
+
+        .explorer-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .meter-container {
+            margin-bottom: 1.2rem;
+        }
+
+        .meter-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .meter-bar {
+            height: 12px;
+            background-color: var(--border-color);
+            border-radius: 99px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            border-radius: 99px;
+            width: 0;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .meter-fill.satisfaction {
+            background: linear-gradient(90deg, #6366f1, var(--accent-primary));
+        }
+
+        .meter-fill.suicide {
+            background: linear-gradient(90deg, var(--accent-yellow), var(--accent-secondary));
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .badge.danger {
+            background-color: rgba(244, 63, 94, 0.15);
+            color: var(--accent-secondary);
+            border: 1px solid var(--accent-secondary);
+        }
+
+        .badge.success {
+            background-color: rgba(52, 211, 153, 0.15);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+
+        .badge.warning {
+            background-color: rgba(251, 191, 36, 0.15);
+            color: var(--accent-yellow);
+            border: 1px solid var(--accent-yellow);
+        }
+
+        .badge.info {
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--accent-primary);
+            border: 1px solid var(--accent-primary);
+        }
+
+        /* Image Zoom/Lightbox */
+        .zoom-img-container {
+            cursor: zoom-in;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+            background-color: #000;
+            position: relative;
+        }
+
+        .zoom-img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+            opacity: 0.9;
+        }
+
+        .zoom-img-container:hover img {
+            transform: scale(1.02);
+            opacity: 1;
+        }
+
+        .zoom-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(15, 23, 42, 0.7);
+            color: #ffffff;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            pointer-events: none;
+        }
+
+        /* Presentation view styling */
+        .presentation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 12rem);
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 900px;
+            display: none;
+            transform: scale(0.96);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            display: block;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .slide-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3.5rem;
+            min-height: 480px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .slide-header {
+            margin-bottom: 2rem;
+        }
+
+        .slide-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-img-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .slide-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .slide-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .slide-control-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .slide-control-btn:hover {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
+        }
+
+        .slide-indicator {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        /* Lightbox modal styling */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 85%;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .lightbox-modal.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border: 1px solid #334155;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -2.5rem;
+            right: 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent-secondary);
+        }
+
+        .lightbox-caption {
+            color: #ffffff;
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 992px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .slide-img-layout {
+                grid-template-columns: 1fr;
+            }
+            .slide-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .doc-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header navigation and utilities -->
+    <header>
+        <div class="header-logo">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>SATISFACTION vs SUICIDE</span>
+        </div>
+        <div class="controls">
+            <!-- Home Button -->
+            <a href="https://gw-r.github.io/AI2026/" class="home-btn">
+                <i class="fa-solid fa-house"></i> 홈으로
+            </a>
+            
+            <!-- Mode switcher: Presentation vs Report -->
+            <div class="toggle-container" id="mode-switcher">
+                <div class="toggle-btn active" data-mode="report">
+                    <i class="fa-solid fa-file-invoice"></i> 보고서 형식
+                </div>
+                <div class="toggle-btn" data-mode="presentation">
+                    <i class="fa-solid fa-person-chalkboard"></i> 발표자료 형식
+                </div>
+            </div>
+            
+            <!-- Dark/Light Theme Switcher -->
+            <div class="theme-switch" id="theme-switcher">
+                <i class="fa-solid fa-moon"></i>
+            </div>
+            
+            <!-- PDF Download Button -->
+            <a href="삶의_만족도와_자살률_상관관계_분석_보고서.pdf" class="pdf-download-btn" download>
+                <i class="fa-solid fa-file-pdf"></i> PDF 다운로드
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- ================== MODE 1: REPORT VIEW ================== -->
+        <div id="report-view" class="mode-section active">
+            <div class="grid-layout">
+                
+                <!-- Floating table of contents -->
+                <aside class="sidebar">
+                    <ul class="nav-list">
+                        <li class="nav-item active"><a href="#doc-header"><i class="fa-solid fa-house"></i> 메인</a></li>
+                        <li class="nav-item"><a href="#section-summary"><i class="fa-solid fa-star"></i> 1. 요약</a></li>
+                        <li class="nav-item"><a href="#section-intro"><i class="fa-solid fa-circle-info"></i> 2. 서론 및 방법론</a></li>
+                        <li class="nav-item"><a href="#section-visuals"><i class="fa-solid fa-chart-simple"></i> 3. 시각화 및 분석</a></li>
+                        <li class="nav-item"><a href="#section-explorer"><i class="fa-solid fa-magnifying-glass-chart"></i> 지역별 탐색기</a></li>
+                        <li class="nav-item"><a href="#section-policy"><i class="fa-solid fa-lightbulb"></i> 4. 정책적 시사점</a></li>
+                    </ul>
+                </aside>
+                
+                <!-- Main article content -->
+                <main class="content-area">
+                    
+                    <!-- Cover section -->
+                    <div class="card" id="doc-header">
+                        <h1 class="doc-title">삶의 만족도와 자살률 간의 상관관계 분석 보고서 (2020~2024)</h1>
+                        <p>본 보고서는 대한민국 통계청 및 관계 기관의 2020년부터 2024년까지의 지역별 '삶의 만족도'와 '인구 10만 명당 자살률' 데이터를 기반으로 두 지표 간의 통계적 상관관계를 다각도로 분석한 결과입니다.</p>
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div class="stat-value">-0.048</div>
+                                <div class="stat-label">종합 피어슨 상관계수 (r)</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">2020년</div>
+                                <div class="stat-label">유의한 음의 상관관계 관찰</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">2.4배</div>
+                                <div class="stat-label">남성 자살률 격차 (vs 여성)</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">세종시</div>
+                                <div class="stat-label">삶의 만족도 1위 / 자살률 최저</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 1. 요약 -->
+                    <div class="card" id="section-summary">
+                        <h2 class="section-title">1. 요약 (Executive Summary)</h2>
+                        <p><strong>• 종합 상관관계의 결여</strong>: 5개년 전체 지역 데이터를 통합 분석한 결과, 주관적 삶의 만족도 지수와 실제 자살률 간에는 유의미한 상관관계가 발견되지 않았습니다 (Pearson r = -0.048, p = 0.665).</p>
+                        <p><strong>• 코로나19 시기(2020년)의 특이점</strong>: 2020년에는 삶의 만족도가 높을수록 자살률이 뚜렷하게 낮아지는 음(-)의 상관관계가 강하게 나타났습니다 (Pearson r = -0.513, p = 0.035). 그러나 이 관계는 2021년 이후 급격히 소멸하였습니다.</p>
+                        <p><strong>• 최근 2개년(2023~2024년)의 지표 디커플링 (Divergence)</strong>: 2023년과 2024년에는 국민들의 주관적 삶의 만족도 평균이 전년과 유사하게 유지(3.37점 수준)되었음에도 불구하고, 자살률은 25.2명(2022년)에서 29.1명(2024년)으로 급격히 상승하는 디커플링 현상이 나타났습니다.</p>
+                        <p><strong>• 성별에 따른 극단적 격차</strong>: 주관적 삶의 만족도는 남성(3.37점)이 여성(3.36점)보다 약간 높게 나타났으나, 자살률은 남성(39.61명)이 여성(16.46명)보다 약 2.4배 높았습니다.</p>
+                        <p><strong>• 지역별 만족도-자살률의 역설(Paradox)</strong>: 충남, 강원, 제도는 삶의 만족도가 최상위권에 속함과 동시에 자살률 역시 전국 최상위권을 기록하는 모순적 지표를 보였습니다. 반면, 세종시는 가장 높은 만족도와 가장 낮은 자살률을 기록했습니다.</p>
+                    </div>
+                    
+                    <!-- 2. 서론 및 방법론 -->
+                    <div class="card" id="section-intro">
+                        <h2 class="section-title">2. 서론 및 분석 방법론</h2>
+                        <h3 class="section-subtitle"><i class="fa-solid fa-bullseye"></i> 2.1 분석 목적</h3>
+                        <p>주관적으로 체감하는 웰빙 지표(삶의 만족도)와 사회의 가장 극단적인 사회적 병리 지표(자살률) 간의 관계를 분석하여, 정신 건강 정책 및 자살 예방 전략에 유의미한 통계적 시사점을 제공하고자 합니다.</p>
+                        
+                        <h3 class="section-subtitle"><i class="fa-solid fa-database"></i> 2.2 분석 데이터</h3>
+                        <p>• 삶의 만족도 데이터: 전국 17개 시도별 삶의 만족도 분포 (통계청)<br>
+                        • 자살률 데이터: 인구 10만 명당 자살률 (통계청)<br>
+                        • 대상 기간: 2020년 ~ 2024년 (5개년)</p>
+                        
+                        <h3 class="section-subtitle"><i class="fa-solid fa-calculator"></i> 2.3 지표 정의 및 전처리</h3>
+                        <p>행정구역 명칭을 통일한 뒤, 삶의 만족도 분포 백분율을 하나의 통합 지수로 산출하기 위해 아래와 같이 가중 평균을 적용했습니다 (5점 만점):</p>
+                        <div style="background-color: rgba(56, 189, 248, 0.08); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-primary); margin: 1rem 0; font-family: 'Outfit', sans-serif; font-size: 0.95rem; text-align: center;">
+                            만족도 지수 = (매우 만족 × 5 + 약간 만족 × 4 + 보통 × 3 + 약간 불만족 × 2 + 매우 불만족 × 1) / 100
+                        </div>
+                    </div>
+                    
+                    <!-- 3. 시각화 및 분석 -->
+                    <div class="card" id="section-visuals">
+                        <h2 class="section-title">3. 시각화 그래프별 상세 분석 결과</h2>
+                        
+                        <!-- 3.1 그림 1 -->
+                        <h3 class="section-subtitle"><i class="fa-solid fa-circle-dot"></i> 3.1 [그림 1] 종합 상관관계 분석</h3>
+                        <div class="zoom-img-container" onclick="openLightbox('analysis_results/overall_correlation.png', '[그림 1] 삶의 만족도 지수와 자살률 종합 산점도 및 선형 회귀선')">
+                            <img src="analysis_results/overall_correlation.png" alt="종합 상관관계 산점도 및 회귀선">
+                            <div class="zoom-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> 클릭하여 확대</div>
+                        </div>
+                        <p><strong>1) 그래프 설명:</strong> 2020년부터 2024년까지 전국 17개 시도의 총 85개 데이터 포인트를 2차원 평면에 산점도로 나타내고, 그 추세를 선형 회귀선(붉은 실선)으로 표시한 것입니다. 가로축(X축)은 '삶의 만족도 지수', 세로축(Y축)은 '인구 10만 명당 자살률(명)'을 의미합니다.</p>
+                        <p><strong>2) 통계치 및 수치적 해석:</strong> 피어슨 상관계수 r은 -0.048 (p-value = 0.665)이며, 스피어먼 상관계수 ρ는 -0.021 (p-value = 0.849)입니다. 상관계수가 거의 0에 수렴하고 p-value가 유의수준(0.05)보다 월등히 높아 두 지표 간에 종합적인 연관성이 없는 것으로 해석됩니다.</p>
+                        <p><strong>3) 심층 사회학적 해석:</strong> 대다수 일반 대중의 웰빙을 보여주는 삶의 만족도가 평탄하게 흐르더라도 극단적 소외 계층의 병리적 붕괴(자살)는 완전히 다르게 일어날 수 있음을 방증합니다. 즉, 단순히 평균적 행복도를 높이는 정책만으로는 자살률을 제어하는 데 한계가 있음을 시사합니다.</p>
+                        
+                        <hr>
+                        
+                        <!-- 3.2 그림 2 -->
+                        <h3 class="section-subtitle"><i class="fa-solid fa-chart-line"></i> 3.2 [그림 2] 전국 평균 연도별 추이 분석</h3>
+                        <div class="zoom-img-container" onclick="openLightbox('analysis_results/yearly_trends.png', '[그림 2] 전국 평균 삶의 만족도 및 자살률 연도별 추이 (2020~2024)')">
+                            <img src="analysis_results/yearly_trends.png" alt="전국 평균 연도별 추이">
+                            <div class="zoom-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> 클릭하여 확대</div>
+                        </div>
+                        <p><strong>1) 그래프 설명:</strong> 2020년부터 2024년까지 대한민국 전국 평균 지표의 연도별 흐름을 이중 축(Dual-Axis) 그래프로 나타낸 시각화입니다. 왼쪽 Y축(파란색)은 삶의 만족도 지수, 오른쪽 Y축(빨간색)은 인구 10만 명당 자살률입니다.</p>
+                        <p><strong>2) 연도별 수치 변화 추이:</strong> 2021년 코로나 팬데믹 장기화 영향으로 삶의 만족도는 3.423점에서 3.161점으로 하락했다가 2022년 일상 회복의 기대로 3.388점으로 급격히 회복되었습니다. 그러나 자살률은 2022년 최저점(25.2명)을 찍은 후 2023년 27.3명, 2024년 29.1명으로 급격히 증가하는 심각한 괴리(디커플링)를 보였습니다.</p>
+                        <p><strong>3) 심층 사회학적 해석:</strong> 고금리와 고물가의 지속적인 타격이 모든 계층에게 평등하게 다가오는 것이 아니라, 취약 가구나 채무 한계 계층의 극단적인 선택으로 집중되어 작용하고 있음을 반증합니다.</p>
+                        
+                        <hr>
+                        
+                        <!-- 3.3 그림 3 -->
+                        <h3 class="section-subtitle"><i class="fa-solid fa-venus-mars"></i> 3.3 [그림 3] 성별 격차 비교 분석</h3>
+                        <div class="zoom-img-container" onclick="openLightbox('analysis_results/gender_gaps.png', '[그림 3] 성별 삶의 만족도 지수와 자살률 상관관계 비교')">
+                            <img src="analysis_results/gender_gaps.png" alt="성별 격차 비교 산점도">
+                            <div class="zoom-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> 클릭하여 확대</div>
+                        </div>
+                        <p><strong>1) 그래프 설명:</strong> 5개년 지역별 관측 데이터를 남성(파란색 원형 마커 및 실선)과 여성(분홍색 다이아몬드 마커 및 대시선)으로 완전히 분리하여 상관관계를 비교 분석한 산점도 및 선형 회귀 그래프입니다.</p>
+                        <p><strong>2) 통계치 및 수치적 해석:</strong> 남성의 5개년 평균 만족도는 3.373점이고 자살률은 39.61명인 반면, 여성은 만족도 3.358점, 자살률은 16.46명입니다. 주관적 삶의 만족도는 유사하지만 남성 자살률이 무려 2.4배 높습니다.</p>
+                        <p><strong>3) 심층 젠더적 해석:</strong> 가부장적인 문화 구조에서 남성들이 자신의 우울이나 정신적 위기를 설문조사 시 외부에 숨기는 경향('괜찮다'고 응답)이 있어 만족도가 높게 과대대표되지만, 실제로는 고위험 상황에서 더 치명적인 선택을 하여 높은 사망률로 발현된다는 점을 설명합니다.</p>
+                        
+                        <hr>
+                        
+                        <!-- 3.4 그림 4 -->
+                        <h3 class="section-subtitle"><i class="fa-solid fa-list-ol"></i> 3.4 [그림 4] 지역별 비교 및 '만족도의 역설' 분석</h3>
+                        <div class="zoom-img-container" onclick="openLightbox('analysis_results/regional_rankings.png', '[그림 4] 지역별 평균 삶의 만족도 지수 및 자살률 랭킹 비교')">
+                            <img src="analysis_results/regional_rankings.png" alt="지역별 랭킹 비교">
+                            <div class="zoom-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> 클릭하여 확대</div>
+                        </div>
+                        <p><strong>1) 그래프 설명:</strong> 5개년 평균치를 기반으로 전국 17개 시도의 상대적 순위를 비교한 병렬 막대그래프입니다. 좌측은 삶의 만족도 랭킹, 우측은 자살률 랭킹을 나타냅니다.</p>
+                        <p><strong>2) 핵심 지역 분석 및 역설:</strong> 세종시는 만족도 1위(3.524점)와 자살률 최저 1위(20.74명)로 이상적인 음의 일치를 보였으나, 충남(만족도 2위 / 자살률 1위), 강원(만족도 5위 / 자살률 2위), 제주(만족도 4위 / 자살률 5위)는 매우 강한 '만족도의 역설(Paradox)'을 보였습니다.</p>
+                        <p><strong>3) 심층 지역적 해석:</strong> 강원이나 충남 등은 자연환경과 복지 인프라가 갖추어져 주류 활동인구의 삶의 질 만족도는 대단히 높지만, 동시에 농어촌 외곽 지역의 고령층 고립, 노인 빈곤 등 복지 사각지대의 극단적 리스크가 공존하여 두 지표가 모두 높게 랭크되는 '지역 내 복지 불평등 양극화'를 증명합니다.</p>
+                        
+                        <hr>
+                        
+                        <!-- 3.5 그림 5 -->
+                        <h3 class="section-subtitle"><i class="fa-solid fa-calendar-days"></i> 3.5 [그림 5] 연도별 상관관계 추이 (Grid 분석)</h3>
+                        <div class="zoom-img-container" onclick="openLightbox('analysis_results/yearly_facet_grid.png', '[그림 5] 연도별 삶의 만족도와 자살률 상관관계 변화 추이 (1x5 Grid)')">
+                            <img src="analysis_results/yearly_facet_grid.png" alt="연도별 상관관계 변화 Grid">
+                            <div class="zoom-badge"><i class="fa-solid fa-magnifying-glass-plus"></i> 클릭하여 확대</div>
+                        </div>
+                        <p><strong>1) 그래프 설명:</strong> 2020년부터 2024년까지의 각 연도별 상관관계를 종단적으로 추적하기 위해 5개의 개별 산점도와 회귀선을 1행 5열의 격자(Facet Grid)로 배열한 시각화입니다.</p>
+                        <p><strong>2) 연도별 상관계수 분석 및 해설:</strong> 2020년에는 피어슨 상관계수가 -0.513(p-value = 0.035)으로 유일하게 유의미한 수준의 음의 상관관계를 기록했습니다. 그러나 2021년 r = 0.050, 2022년 r = 0.077, 2023년 r = -0.109로 상관관계가 소멸했으며, 코로나19 장기화에 따른 사회 연대 완충막의 소실 과정을 드러냅니다.</p>
+                    </div>
+                    
+                    <!-- Interactive Regional Data Explorer widget -->
+                    <div class="card explorer-card" id="section-explorer">
+                        <h2 class="section-title">
+                            <span><i class="fa-solid fa-location-dot"></i> 대한민국 17개 시도별 데이터 탐색기</span>
+                        </h2>
+                        <p>알고 싶은 지역을 선택하시면 5개년 평균 주관적 삶의 만족도 점수와 자살률을 전국 평균과 비교해 드립니다.</p>
+                        
+                        <div class="selector-group">
+                            <label for="region-select" style="font-weight: 600; color: var(--text-primary);">지역 선택:</label>
+                            <select id="region-select" class="custom-select">
+                                <!-- Options will be dynamically populated -->
+                            </select>
+                        </div>
+                        
+                        <div class="explorer-results">
+                            <div class="result-bars">
+                                <!-- Satisfaction index indicator -->
+                                <div class="meter-container">
+                                    <div class="meter-info">
+                                        <span>삶의 만족도 지수 (5점 만점)</span>
+                                        <span id="sat-val" style="color: var(--accent-primary); font-weight: 700;">3.524점</span>
+                                    </div>
+                                    <div class="meter-bar">
+                                        <div id="sat-fill" class="meter-fill satisfaction"></div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">전국 평균: 3.370점</div>
+                                </div>
+                                
+                                <!-- Suicide rate indicator -->
+                                <div class="meter-container">
+                                    <div class="meter-info">
+                                        <span>자살률 (인구 10만 명당, 명)</span>
+                                        <span id="sui-val" style="color: var(--accent-secondary); font-weight: 700;">20.74명</span>
+                                    </div>
+                                    <div class="meter-bar">
+                                        <div id="sui-fill" class="meter-fill suicide"></div>
+                                    </div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">전국 평균: 26.66명</div>
+                                </div>
+                            </div>
+                            
+                            <!-- AI Status / Profile Diagnosis -->
+                            <div class="result-analysis" style="background-color: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--border-color); text-align: center;">
+                                <div style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">지역 분석 진단 결과</div>
+                                <div id="region-status-badge" class="badge">--</div>
+                                <p id="region-desc" style="margin-top: 1rem; font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. 정책적 시사점 -->
+                    <div class="card" id="section-policy">
+                        <h2 class="section-title">4. 정책적 시사점 및 결론</h2>
+                        <p><strong>1. '평균의 오류' 극복:</strong> 주관적 웰빙 조사(삶의 만족도)의 만족스러운 수치에 안주하여 정신 보건 예산을 삭감하거나 관심을 늦추어서는 안 됩니다. 정책 입안자는 평균 만족도 상승이 아닌, '최하위 취약 계층의 리스크 집중 관리'로 패러다임을 전환해야 합니다.</p>
+                        <p><strong>2. '만족도의 역설' 지역 맞춤 처방:</strong> 충남, 강원, 제주 등 만족도와 자살률이 동시에 높은 지자체는 일반적인 인프라 확충 보다는 독거노인 말벗 서비스, 찾아가는 보건소, 농번기 소득 안정망 등 고령 인구를 타겟으로 한 '밀착형 복지 설계'에 집중해야 합니다.</p>
+                        <p><strong>3. 디커플링에 대응하는 즉각적 완충 장치:</strong> 최근 고금리/고물가 장기화에 기인한 가계 붕괴가 자살률 폭증(29.1명)으로 이어지는 만큼, 긴급 복지 지원, 다중채무 채무 조정 프로그램, 취약 자영업자 부조 등 사회적/경제적 방아쇠를 차단할 수 있는 다부처 공조가 시급합니다.</p>
+                    </div>
+                    
+                </main>
+            </div>
+        </div>
+        
+        <!-- ================== MODE 2: PRESENTATION (SLIDE) VIEW ================== -->
+        <div id="presentation-view" class="mode-section">
+            <div class="presentation-container">
+                
+                <!-- Slide 1: Cover -->
+                <div class="slide active" data-slide="1">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 01. Cover</span>
+                            <h2 style="font-size: 2.2rem; margin-top: 0.8rem; line-height: 1.3;">삶의 만족도와 자살률 간의 상관관계 분석 보고서</h2>
+                        </div>
+                        <div class="slide-body">
+                            <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">대한민국 17개 시도별 삶의 만족도와 인구 10만 명당 자살률 데이터(2020~2024)를 정밀 전처리하여 둘 간의 실제 연계 강도를 규명합니다.</p>
+                            <div class="stat-grid" style="margin-top: 1rem;">
+                                <div class="stat-box" style="background: rgba(56, 189, 248, 0.05);">
+                                    <div class="stat-value" style="color: var(--accent-primary);">-0.048</div>
+                                    <div class="stat-label">종합 상관계수 (r)</div>
+                                </div>
+                                <div class="stat-box" style="background: rgba(244, 63, 94, 0.05);">
+                                    <div class="stat-value" style="color: var(--accent-secondary);">최근 2년</div>
+                                    <div class="stat-label">만족도-자살률 디커플링</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer">
+                            <span>Advanced Agentic Coding Project</span>
+                            <span>2026. 06</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 2: Methodology -->
+                <div class="slide" data-slide="2">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 02. Methodology</span>
+                            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">분석 데이터 및 가중 만족도 지수 정의</h2>
+                        </div>
+                        <div class="slide-body">
+                            <p style="font-size: 1.05rem;"><strong>• 연도 범위</strong>: 2020년 ~ 2024년 (5개년, 17개 시도 총 85개 표본)</p>
+                            <p style="font-size: 1.05rem;"><strong>• 데이터 융합</strong>: 자살률 시도 명칭 통일 ('전라북도' → '전북특별자치도' 등)</p>
+                            <p style="font-size: 1.05rem; margin-bottom: 1.5rem;"><strong>• 삶의 만족도 지수 (Satisfaction Index) 산출식</strong>:</p>
+                            <div style="background-color: var(--bg-color); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); font-family: 'Outfit', sans-serif; text-align: center; font-size: 1.1rem; color: var(--accent-primary);">
+                                ( 매우 만족×5 + 약간 만족×4 + 보통×3 + 약간 불만족×2 + 매우 불만족×1 ) / 100
+                            </div>
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.8rem; text-align: center;">※ 분포 비율을 반영한 1~5점 척도 가중 산술 점수</p>
+                        </div>
+                        <div class="slide-footer">
+                            <span>상관분석 방법론</span>
+                            <span>2 / 7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 3: Overall Correlation -->
+                <div class="slide" data-slide="3">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 03. Overall Correlation</span>
+                            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">종합 상관관계 분석: 선형 연관성 결여</h2>
+                        </div>
+                        <div class="slide-body">
+                            <div class="slide-img-layout">
+                                <div>
+                                    <div class="zoom-img-container" onclick="openLightbox('analysis_results/overall_correlation.png', '종합 상관관계 산점도')">
+                                        <img src="analysis_results/overall_correlation.png" alt="종합 상관관계">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p><strong>• 피어슨 상관계수 (r)</strong>: <span style="font-family: 'Outfit'; font-weight: 700; color: var(--accent-secondary);">-0.048</span> (p = 0.665)</p>
+                                    <p><strong>• 스피어먼 상관계수 (ρ)</strong>: <span style="font-family: 'Outfit'; font-weight: 700;">-0.021</span> (p = 0.849)</p>
+                                    <p style="font-size: 0.95rem; margin-top: 1rem;">• 5개년 누적 통합 관찰 결과, 주관적 삶의 만족도와 실제 자살률은 <strong>통계적으로 무상관</strong> 관계를 이룹니다.</p>
+                                    <p style="font-size: 0.95rem;">• 평균적 웰빙에 가려진 <strong>'한계 취약 고위험군'</strong>의 특수한 붕괴는 평균 통계 수치에 반영되기 힘듦을 의미합니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer">
+                            <span>종합 상관관계 결과</span>
+                            <span>3 / 7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 4: Yearly Trends -->
+                <div class="slide" data-slide="4">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 04. Yearly Trends</span>
+                            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">연도별 추이 분석: 만족도와 자살률의 괴리</h2>
+                        </div>
+                        <div class="slide-body">
+                            <div class="slide-img-layout">
+                                <div>
+                                    <div class="zoom-img-container" onclick="openLightbox('analysis_results/yearly_trends.png', '연도별 추이')">
+                                        <img src="analysis_results/yearly_trends.png" alt="연도별 추이">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p><strong>• 2020~2022년 (동행 구간)</strong>: 코로나 대유행 타격으로 2021년 만족도 하락 후 2022년 안정화. 자살률 또한 25.2명으로 하락하며 궤적을 공유함.</p>
+                                    <p><strong>• 2023~2024년 (디커플링 구간)</strong>: 주관적 만족도는 3.37점 수준으로 정체/횡보하였으나, 자살률은 29.1명으로 <strong>15.4% 급상승</strong>.</p>
+                                    <p style="font-size: 0.95rem; margin-top: 0.8rem;">• 고금리/고물가의 실물경제 위기가 다수 대중의 만족도보다 한계 계층의 극단 선택을 직접 방아쇠한 현상.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer">
+                            <span>전국 연도별 흐름</span>
+                            <span>4 / 7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 5: Gender Gap -->
+                <div class="slide" data-slide="5">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 05. Gender Disaggregation</span>
+                            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">성별 격차 분석: 만족도의 은폐와 극단적 발현</h2>
+                        </div>
+                        <div class="slide-body">
+                            <div class="slide-img-layout">
+                                <div>
+                                    <div class="zoom-img-container" onclick="openLightbox('analysis_results/gender_gaps.png', '성별 격차 비교')">
+                                        <img src="analysis_results/gender_gaps.png" alt="성별 격차 비교">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p><strong>• 남성 (Male)</strong>: 만족도 3.373점 | 자살률 <span style="font-weight:700; color:var(--accent-secondary);">39.61명</span></p>
+                                    <p><strong>• 여성 (Female)</strong>: 만족도 3.358점 | 자살률 <span style="font-weight:700;">16.46명</span></p>
+                                    <p style="font-size: 0.95rem; margin-top: 1rem;">• 주관적 삶의 만족도는 성별 격차가 크지 않으나, <strong>남성 자살률은 여성의 2.4배 수준</strong>입니다.</p>
+                                    <p style="font-size: 0.95rem;">• 남성의 <strong>'심리적 취약성 은폐 성향'</strong>이 만족도를 과대 표기하게 하고, 치명적 수단 선택으로 인한 성공률 편차가 지표에 반영된 결과입니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer">
+                            <span>성별 격차 비교</span>
+                            <span>5 / 7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 6: Regional Paradox -->
+                <div class="slide" data-slide="6">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 06. Regional Paradox</span>
+                            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">지역별 분석: 삶의 만족도-자살률의 역설</h2>
+                        </div>
+                        <div class="slide-body">
+                            <div class="slide-img-layout">
+                                <div>
+                                    <div class="zoom-img-container" onclick="openLightbox('analysis_results/regional_rankings.png', '지역별 랭킹 비교')">
+                                        <img src="analysis_results/regional_rankings.png" alt="지역별 랭킹 비교">
+                                    </div>
+                                </div>
+                                <div>
+                                    <p><strong>• 세종시 (정치적 선순환)</strong>: 삶의 만족도 1위 | 자살률 최저 1위. 안정적 계획도시 인프라 효과.</p>
+                                    <p><strong>• 충남 & 강원 & 제주 (만족도의 역설)</strong>: 만족도가 전국 최상위권임에도 실제 자살률 역시 전국 최상위권(충남 1위, 강원 2위)을 유지하는 모순 관찰.</p>
+                                    <p style="font-size: 0.95rem; margin-top: 0.8rem;">• 도심지의 쾌적한 만족도가 농어촌 노인 가구의 소득 빈곤, 고령화 고립 등 취약 요인을 상쇄하는 <strong>'평균 왜곡 복지 양극화'</strong> 증명.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer">
+                            <span>지역 격차 분석</span>
+                            <span>6 / 7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 7: Policy Implications -->
+                <div class="slide" data-slide="7">
+                    <div class="slide-card">
+                        <div class="slide-header">
+                            <span style="font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; font-weight: 700; letter-spacing: 2px;">Slide 07. Policy Implications</span>
+                            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">결론 및 3대 핵심 정책적 시사점</h2>
+                        </div>
+                        <div class="slide-body">
+                            <p style="font-size: 1.1rem; margin-bottom: 0.8rem;"><strong>1. '평균의 오류' 스크리닝 탈피</strong></p>
+                            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-left: 1.5rem; margin-bottom: 1rem;">주관적 평균 웰빙 점수에 의존하지 말고, 사회 소외 위기층을 정밀 선별하는 '취약 계층 타겟 돌봄 복지'로 패러다임 전환 필요.</p>
+                            
+                            <p style="font-size: 1.1rem; margin-bottom: 0.8rem;"><strong>2. 농어촌 고립 밀착형 지역 복지</strong></p>
+                            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-left: 1.5rem; margin-bottom: 1rem;">만족도의 역설을 보인 충남, 강원, 제주 등은 독거노인 커뮤니티 케어, 방문 보건 확대 등 외곽 인구 지탱 정책 수립 필수.</p>
+                            
+                            <p style="font-size: 1.1rem; margin-bottom: 0.8rem;"><strong>3. 긴급 가계 경제적 방어벽 가동</strong></p>
+                            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-left: 1.5rem;">최근 자살률 급등(29.1명)을 제어하기 위해 고금리 가계 다중채무자 신용 조정 및 자영업 금융 지원 실효성 긴급 강화.</p>
+                        </div>
+                        <div class="slide-footer">
+                            <span>정책 제언</span>
+                            <span>7 / 7</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide Controls -->
+                <div class="slide-nav">
+                    <button class="slide-control-btn" id="prev-slide-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="slide-control-btn slide-indicator" id="slide-num-indicator">1 / 7</div>
+                    <button class="slide-control-btn" id="next-slide-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div class="lightbox-modal" id="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></span>
+            <img src="" id="lightbox-img" alt="확대 이미지">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        // Regional Data for explorer
+        const regionalData = {
+            "세종특별자치시": { satisfaction: 3.524, suicide: 20.74, desc: "만족도 전국 1위 및 자살률 최저 1위를 기록한 가장 이상적인 지역입니다. 젊은 평균 연령층 분포와 행정도시의 경제 안정성이 선순환을 만들고 있습니다.", status: "행복-안전 일치 지역", badgeClass: "success" },
+            "충청남도": { satisfaction: 3.444, suicide: 34.28, desc: "만족도 전국 2위이지만 자살률은 전국 1위를 기록한 대표적인 '만족도의 역설' 지역입니다. 농어촌 소외 계층과 중산층 간의 지역 내 양극화 관리가 극히 시급합니다.", status: "만족도의 역설 (위험)", badgeClass: "danger" },
+            "강원특별자치도": { satisfaction: 3.410, suicide: 33.60, desc: "만족도 5위임에도 자살률은 전국 2위로 매우 높습니다. 지리적 고립감, 인구 고령화 및 취약 1인 가구 비율이 높은 구조적 단점을 극복해야 합니다.", status: "만족도의 역설 (위험)", badgeClass: "danger" },
+            "제주특별자치도": { satisfaction: 3.431, suicide: 29.78, desc: "만족도는 4위로 높게 집계되나 자살률도 5위로 동시에 매우 높습니다. 관광 인프라에 가려진 현지 농어민 및 소외 고령층의 사회적 보완이 요구됩니다.", status: "만족도의 역설 (위험)", badgeClass: "danger" },
+            "대전광역시": { satisfaction: 3.435, suicide: 27.96, desc: "만족도 3위로 높고 자살률도 10위로 평균에 근접합니다. 주관적 웰빙에 대비해서는 노인 고독사와 같은 고위험군 관리가 다소 요구되는 위치입니다.", status: "보통-위험 주의 지역", badgeClass: "warning" },
+            "광주광역시": { satisfaction: 3.394, suicide: 26.24, desc: "만족도 6위 및 자살률 14위로 비교적 안정을 찾은 도시 지역입니다. 청년 만족도의 분산이 안정적인 추세를 주도하고 있습니다.", status: "보통-안정 지역", badgeClass: "info" },
+            "전라남도": { satisfaction: 3.376, suicide: 29.80, desc: "만족도는 평균 수준(7위)이나 자살률이 4위로 매우 높은 위험군입니다. 농어촌 비율이 높은 구조적 한계와 독거노인 돌봄 사각지대가 존재합니다.", status: "취약-위험 지역", badgeClass: "warning" },
+            "전북특별자치도": { satisfaction: 3.365, suicide: 28.06, desc: "만족도 8위, 자살률 9위로 전국 평균 수준을 유지하고 있습니다. 점진적인 고령층 밀착 돌봄으로 수치를 개선할 여력이 있습니다.", status: "보통-유지 지역", badgeClass: "info" },
+            "충청북도": { satisfaction: 3.359, suicide: 30.60, desc: "만족도는 9위로 중간이지만 자살률은 3위로 매우 높습니다. 자살 고위험군에 대한 지역 거점 병원과의 연계망 치료 조치가 집중 확대되어야 합니다.", status: "취약-위험 지역", badgeClass: "danger" },
+            "경상남도": { satisfaction: 3.358, suicide: 27.06, desc: "만족도 10위, 자살률 13위로 두 지표 모두 중간 등급입니다. 제조업 침체 등 산업 경기 변동에 연동된 청장년 자살 리스크의 상시 모니터링이 필요합니다.", status: "보통-유지 지역", badgeClass: "info" },
+            "서울특별시": { satisfaction: 3.355, suicide: 22.80, desc: "만족도는 11위로 낮지만 자살률 역시 16위로 매우 낮습니다. 치안, 의료망 인프라가 풍부하지만 고독한 1인 청년 가구의 주관적 정서 관리가 요구됩니다.", status: "저만족-고인프라 지역", badgeClass: "info" },
+            "울산광역시": { satisfaction: 3.337, suicide: 28.62, desc: "만족도는 12위로 하위권이지만 자살률은 7위로 높습니다. 공업도시 특유의 남성 은퇴자 소득 단절감 및 은폐된 정서 취약성에 대안이 필요합니다.", status: "취약-위험 지역", badgeClass: "warning" },
+            "경기도": { satisfaction: 3.320, suicide: 24.74, desc: "만족도는 13위로 하위권이고 자살률은 15위로 대단히 낮습니다. 서울과 유사하게 전반적으로 인프라 안전망은 작동하나 장시간 출퇴근 등으로 정서 피로도가 큽니다.", status: "저만족-안정 지역", badgeClass: "info" },
+            "부산광역시": { satisfaction: 3.289, suicide: 28.36, desc: "만족도 14위로 매우 낮고 자살률은 8위로 높은 위험 양상입니다. 초고령사회로의 진입이 가장 빨라 노인 빈곤/우울 대책 수립이 촉구됩니다.", status: "취약-우려 지역", badgeClass: "warning" },
+            "인천광역시": { satisfaction: 3.287, suicide: 27.64, desc: "만족도 15위 및 자살률 11위를 기록했습니다. 상대적으로 정주 여건에 대한 주관적 행복감 개선 정책이 강화되어야 할 지점입니다.", status: "저만족-우려 지역", badgeClass: "warning" },
+            "경상북도": { satisfaction: 3.278, suicide: 29.30, desc: "만족도 16위 및 자살률 6위로 지표 밸런스가 매우 취약합니다. 지역 소멸 위기 및 농촌 인구의 절대 고령화 문제가 지표에 직결되고 있습니다.", status: "취약-위험 지역", badgeClass: "danger" },
+            "대구광역시": { satisfaction: 3.250, suicide: 27.38, desc: "만족도가 전국 17위로 최하위입니다. 자살률은 12위로 평균 수준이나 경제 회복력 확보 및 정서 복지 지원을 통합한 행복 프로그램이 가동되어야 합니다.", status: "저만족-보통 지역", badgeClass: "warning" }
+        };
+
+        const nationalAverage = { satisfaction: 3.370, suicide: 26.66 };
+
+        // Global variables for presentation state
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Populate region selector
+            const selectEl = document.getElementById('region-select');
+            Object.keys(regionalData).forEach(region => {
+                const opt = document.createElement('option');
+                opt.value = region;
+                opt.textContent = region;
+                selectEl.appendChild(opt);
+            });
+            
+            // Set initial region data to Sejong
+            updateExplorer("세종특별자치시");
+            
+            // Region selector event
+            selectEl.addEventListener('change', (e) => {
+                updateExplorer(e.target.value);
+            });
+            
+            // Mode switcher logic
+            const modeButtons = document.querySelectorAll('#mode-switcher .toggle-btn');
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modeButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const mode = btn.getAttribute('data-mode');
+                    if (mode === 'presentation') {
+                        document.getElementById('report-view').classList.remove('active');
+                        document.getElementById('presentation-view').classList.add('active');
+                        showSlide(currentSlide);
+                    } else {
+                        document.getElementById('presentation-view').classList.remove('active');
+                        document.getElementById('report-view').classList.add('active');
+                    }
+                });
+            });
+            
+            // Theme switcher logic
+            const themeBtn = document.getElementById('theme-switcher');
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.body.getAttribute('data-theme');
+                if (currentTheme === 'light') {
+                    document.body.removeAttribute('data-theme');
+                    themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                } else {
+                    document.body.setAttribute('data-theme', 'light');
+                    themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+                }
+            });
+            
+            // Slide control event listeners
+            document.getElementById('prev-slide-btn').addEventListener('click', () => {
+                if (currentSlide > 1) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            });
+            
+            document.getElementById('next-slide-btn').addEventListener('click', () => {
+                if (currentSlide < totalSlides) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            });
+
+            // Keyboard navigation for presentation mode
+            document.addEventListener('keydown', (e) => {
+                if (!document.getElementById('presentation-view').classList.contains('active')) return;
+                
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    if (currentSlide < totalSlides) {
+                        currentSlide++;
+                        showSlide(currentSlide);
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    if (currentSlide > 1) {
+                        currentSlide--;
+                        showSlide(currentSlide);
+                    }
+                }
+            });
+        });
+
+        // Update Explorer data presentation
+        function updateExplorer(regionName) {
+            const data = regionalData[regionName];
+            
+            // Compute percentage representations for display
+            // Max satisfaction is 5.0, min in data is ~3.2. Let's scale relative to max=4.0 for better visual range
+            const satPercentage = (data.satisfaction / 4.0) * 100;
+            // Max suicide in data is 34.28. Let's scale relative to max=40.0
+            const suiPercentage = (data.suicide / 40.0) * 100;
+            
+            // Update text values
+            document.getElementById('sat-val').textContent = `${data.satisfaction.toFixed(3)}점`;
+            document.getElementById('sui-val').textContent = `${data.suicide.toFixed(2)}명`;
+            
+            // Animate bar fills
+            document.getElementById('sat-fill').style.width = `${satPercentage}%`;
+            document.getElementById('sui-fill').style.width = `${suiPercentage}%`;
+            
+            // Update diagnosis details
+            const badge = document.getElementById('region-status-badge');
+            badge.className = `badge ${data.badgeClass}`;
+            badge.textContent = data.status;
+            
+            document.getElementById('region-desc').textContent = data.desc;
+        }
+
+        // Slide presentation show slide logic
+        function showSlide(slideIndex) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            const activeSlide = document.querySelector(`.slide[data-slide="${slideIndex}"]`);
+            if (activeSlide) {
+                activeSlide.classList.add('active');
+            }
+            
+            // Update indicator
+            document.getElementById('slide-num-indicator').textContent = `${slideIndex} / ${totalSlides}`;
+        }
+
+        // Lightbox Zoom logic
+        function openLightbox(imgSrc, captionText) {
+            const modal = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const caption = document.getElementById('lightbox-caption');
+            
+            img.src = imgSrc;
+            caption.textContent = captionText;
+            modal.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightbox');
+            modal.classList.remove('active');
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // Close modal on clicking backdrop
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
